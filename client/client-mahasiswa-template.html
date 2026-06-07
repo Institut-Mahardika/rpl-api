@@ -1,0 +1,1300 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daftar Mahasiswa — Praktikum API</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #f5f3ee;
+        --card: #ffffff;
+        --navy: #1b2b3a;
+        --gold: #d4841a;
+        --gold-bg: #fff8ee;
+        --teal: #1a7b6e;
+        --teal-bg: #eaf5f3;
+        --red: #c0392b;
+        --red-bg: #fef0ee;
+        --blue: #1e5fa8;
+        --blue-bg: #eef4fc;
+        --border: #e2ddd6;
+        --text: #1b2b3a;
+        --muted: #7a8694;
+        --mono: "Fira Code", monospace;
+        --sans: "Plus Jakarta Sans", sans-serif;
+        --radius: 12px;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+        font-size: 15px;
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      /* ── HEADER ─────────────────────── */
+      header {
+        background: var(--navy);
+        padding: 0 2rem;
+        height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+      .brand {
+        font-weight: 700;
+        font-size: 15px;
+        color: white;
+      }
+      .brand span {
+        color: #f5a623;
+      }
+      .server-badge {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.55);
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 100px;
+        padding: 4px 12px;
+      }
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #555;
+        transition: background 0.3s;
+        flex-shrink: 0;
+      }
+      .dot.online {
+        background: #22c55e;
+        box-shadow: 0 0 5px #22c55e99;
+      }
+      .dot.offline {
+        background: #ef4444;
+      }
+
+      /* ── CONFIG BAR ─────────────────── */
+      .config-bar {
+        background: white;
+        border-bottom: 1px solid var(--border);
+        padding: 12px 2rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .config-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        white-space: nowrap;
+      }
+      .config-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+        flex-wrap: wrap;
+      }
+      .config-input-wrap {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .config-input-wrap label {
+        font-size: 11px;
+        color: var(--muted);
+        white-space: nowrap;
+        font-weight: 500;
+      }
+      .config-input-wrap input {
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--navy);
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .config-input-wrap input:focus {
+        border-color: var(--navy);
+      }
+      #inp-ip {
+        width: 180px;
+      }
+      #inp-port {
+        width: 80px;
+      }
+      .base-url-preview {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--muted);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 5px 10px;
+        white-space: nowrap;
+      }
+      .btn-cek {
+        padding: 8px 16px;
+        background: var(--navy);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: var(--sans);
+        transition: opacity 0.2s;
+        white-space: nowrap;
+      }
+      .btn-cek:hover {
+        opacity: 0.85;
+      }
+
+      /* ── MAIN LAYOUT ─────────────────── */
+      .page {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        align-items: start;
+      }
+      .col-left {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .col-right {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      /* ── CARD ───────────────────────── */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+      .card-head {
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .card-head h3 {
+        font-size: 14px;
+        font-weight: 700;
+        flex: 1;
+      }
+      .method-tag {
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 500;
+        padding: 3px 8px;
+        border-radius: 5px;
+      }
+      .tag-get {
+        background: var(--teal-bg);
+        color: var(--teal);
+      }
+      .tag-post {
+        background: var(--gold-bg);
+        color: var(--gold);
+      }
+      .tag-put {
+        background: var(--blue-bg);
+        color: var(--blue);
+      }
+      .tag-delete {
+        background: var(--red-bg);
+        color: var(--red);
+      }
+      .card-body {
+        padding: 20px;
+      }
+
+      /* ── FORM ────────────────────────── */
+      .field {
+        margin-bottom: 13px;
+      }
+      .field:last-of-type {
+        margin-bottom: 0;
+      }
+      .field label {
+        display: block;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 5px;
+      }
+      .field input,
+      .field textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: var(--sans);
+        font-size: 14px;
+        color: var(--text);
+        background: var(--bg);
+        outline: none;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .field input:focus,
+      .field textarea:focus {
+        border-color: var(--navy);
+        background: white;
+      }
+      .field textarea {
+        resize: vertical;
+        min-height: 72px;
+      }
+      .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      /* ── TODO COLLAPSIBLE ────────────── */
+      .todo-wrap {
+        margin: 14px 0;
+        border: 1.5px dashed var(--gold);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .todo-toggle {
+        width: 100%;
+        background: var(--gold-bg);
+        border: none;
+        padding: 9px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        font-family: var(--sans);
+        gap: 8px;
+      }
+      .todo-toggle-left {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--gold);
+        letter-spacing: 0.09em;
+      }
+      .todo-toggle-icon {
+        font-size: 12px;
+        color: var(--gold);
+        transition: transform 0.2s;
+        flex-shrink: 0;
+      }
+      .todo-toggle-icon.open {
+        transform: rotate(180deg);
+      }
+      .todo-body {
+        display: none;
+        background: #fffbf0;
+        padding: 13px 15px;
+        font-family: var(--mono);
+        font-size: 11.5px;
+        line-height: 1.9;
+        color: #8b5e00;
+        border-top: 1px dashed rgba(212, 132, 26, 0.3);
+      }
+      .todo-body.open {
+        display: block;
+      }
+      .hl {
+        background: rgba(212, 132, 26, 0.18);
+        border-radius: 3px;
+        padding: 0 4px;
+        color: var(--gold);
+      }
+      .cm {
+        color: #c8a060;
+      }
+
+      /* ── BUTTONS ─────────────────────── */
+      .btn {
+        width: 100%;
+        padding: 11px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: var(--sans);
+        transition:
+          opacity 0.15s,
+          transform 0.1s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .btn:hover {
+        opacity: 0.88;
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .btn-get {
+        background: var(--teal);
+        color: white;
+      }
+      .btn-post {
+        background: var(--gold);
+        color: white;
+      }
+      .btn-put {
+        background: var(--blue);
+        color: white;
+      }
+      .btn-delete {
+        background: var(--red);
+        color: white;
+      }
+      .btn-refresh {
+        background: var(--navy);
+        color: white;
+        padding: 6px 14px;
+        font-size: 12px;
+        width: auto;
+        margin: 0;
+      }
+
+      /* ── RESPONSE ────────────────────── */
+      .response {
+        margin-top: 13px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        display: none;
+      }
+      .response.show {
+        display: block;
+      }
+      .response-bar {
+        padding: 8px 13px;
+        font-size: 12px;
+        font-weight: 600;
+        font-family: var(--mono);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .response-bar.ok {
+        background: var(--teal-bg);
+        color: var(--teal);
+      }
+      .response-bar.err {
+        background: var(--red-bg);
+        color: var(--red);
+      }
+      .response-bar.pending {
+        background: var(--gold-bg);
+        color: var(--gold);
+      }
+      .response-pre {
+        background: var(--navy);
+        padding: 13px 15px;
+        font-family: var(--mono);
+        font-size: 12px;
+        line-height: 1.7;
+        color: #c8d8e8;
+        overflow-x: auto;
+        max-height: 200px;
+        overflow-y: auto;
+        white-space: pre;
+      }
+
+      /* ── TABLE ───────────────────────── */
+      .card.full-width {
+        grid-column: 1 / -1;
+      }
+      .tbl-wrap {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-top: 14px;
+      }
+      thead th {
+        padding: 9px 13px;
+        text-align: left;
+        font-size: 10.5px;
+        font-family: var(--mono);
+        color: var(--muted);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--border);
+        font-weight: 500;
+        background: var(--bg);
+      }
+      tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: background 0.12s;
+      }
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+      tbody tr:hover {
+        background: var(--bg);
+      }
+      tbody td {
+        padding: 11px 13px;
+        vertical-align: middle;
+      }
+      .td-npm {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--gold);
+        font-weight: 500;
+      }
+      .td-pesan {
+        font-size: 12px;
+        color: var(--muted);
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .td-status {
+        display: inline-block;
+        font-size: 10px;
+        font-family: var(--mono);
+        padding: 2px 8px;
+        border-radius: 100px;
+        font-weight: 500;
+      }
+      .st-active {
+        background: var(--teal-bg);
+        color: var(--teal);
+      }
+      .st-pending {
+        background: var(--gold-bg);
+        color: var(--gold);
+      }
+      .empty {
+        text-align: center;
+        padding: 36px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      /* ── TOAST ───────────────────────── */
+      #toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 11px 18px;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 500;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.2s,
+          transform 0.2s;
+        transform: translateY(6px);
+        z-index: 999;
+        max-width: 300px;
+      }
+      #toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      #toast.ok {
+        background: var(--teal-bg);
+        color: var(--teal);
+        border: 1px solid rgba(26, 123, 110, 0.2);
+      }
+      #toast.err {
+        background: var(--red-bg);
+        color: var(--red);
+        border: 1px solid rgba(192, 57, 43, 0.2);
+      }
+      #toast.inf {
+        background: var(--gold-bg);
+        color: #7a4f00;
+        border: 1px solid rgba(212, 132, 26, 0.2);
+      }
+
+      /* ── SPINNER ─────────────────────── */
+      .spin {
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: sp 0.65s linear infinite;
+        display: inline-block;
+      }
+      @keyframes sp {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ── WARN BOX ────────────────────── */
+      .warn-box {
+        background: var(--gold-bg);
+        border: 1px solid rgba(212, 132, 26, 0.25);
+        border-radius: 8px;
+        padding: 11px 14px;
+        margin-bottom: 14px;
+        font-size: 13px;
+        color: #7a4f00;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 680px) {
+        .page {
+          grid-template-columns: 1fr;
+          padding: 1rem;
+        }
+        .field-row {
+          grid-template-columns: 1fr;
+        }
+        header {
+          padding: 0 1rem;
+        }
+        .config-bar {
+          padding: 10px 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <div class="brand">
+        <span>⬡</span> Daftar Mahasiswa — Institut Mahardika
+      </div>
+      <div class="server-badge">
+        <div class="dot" id="dot"></div>
+        <span id="srv-txt">belum terhubung</span>
+      </div>
+    </header>
+
+    <!-- CONFIG BAR -->
+    <div class="config-bar">
+      <span class="config-label">Server</span>
+      <div class="config-group">
+        <div class="config-input-wrap">
+          <label for="inp-ip">IP</label>
+          <input type="text" id="inp-ip" placeholder="192.168.1.10" />
+        </div>
+        <div class="config-input-wrap">
+          <label for="inp-port">Port</label>
+          <input type="text" id="inp-port" placeholder="3000" />
+        </div>
+        <div class="base-url-preview" id="url-preview">http://—:—</div>
+        <button class="btn-cek" onclick="cekKoneksi()">Cek Koneksi</button>
+      </div>
+    </div>
+
+    <div class="page">
+      <!-- ══ KIRI: POST + PUT ══ -->
+      <div class="col-left">
+        <!-- POST — Daftar -->
+        <div class="card">
+          <div class="card-head">
+            <span class="method-tag tag-post">POST</span>
+            <h3>Daftarkan Data Diri</h3>
+          </div>
+          <div class="card-body">
+            <div class="field-row">
+              <div class="field">
+                <label>NPM *</label
+                ><input
+                  type="text"
+                  id="f-npm"
+                  placeholder="624C0004"
+                  maxlength="10"
+                />
+              </div>
+              <div class="field">
+                <label>Nama Lengkap *</label
+                ><input type="text" id="f-nama" placeholder="Nama kamu" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Program Studi *</label
+                ><input
+                  type="text"
+                  id="f-prodi"
+                  placeholder="Teknik Informatika"
+                />
+              </div>
+              <div class="field">
+                <label>Kelas *</label
+                ><input type="text" id="f-kelas" placeholder="TI-6A" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Pesan (opsional)</label
+              ><textarea
+                id="f-pesan"
+                placeholder="Tulis pesan untuk dosen..."
+              ></textarea>
+            </div>
+
+            <div class="todo-wrap">
+              <button class="todo-toggle" onclick="toggleTodo(this)">
+                <span class="todo-toggle-left"
+                  >✏️ TUGAS — fungsi submitDaftar()</span
+                >
+                <span class="todo-toggle-icon">▼</span>
+              </button>
+              <div class="todo-body">
+                <span
+                  >const url = <span class="hl">BASE_URL</span> +
+                  <span class="hl">"/api/..."</span></span
+                ><br />
+                <span class="cm"
+                  >// endpoint mana yang dipakai untuk membuat data baru?</span
+                ><br /><br />
+                <span>const res = await fetch(url, {</span><br />
+                <span>&nbsp;&nbsp;method: <span class="hl">"..."</span>,</span
+                ><br />
+                <span
+                  >&nbsp;&nbsp;headers: { "Content-Type":
+                  <span class="hl">"..."</span> },</span
+                ><br />
+                <span
+                  >&nbsp;&nbsp;body: JSON.stringify({ npm, nama, prodi, kelas,
+                  pesan })</span
+                ><br />
+                <span>})</span>
+              </div>
+            </div>
+
+            <button class="btn btn-post" id="btn-post" onclick="submitDaftar()">
+              Kirim Data
+            </button>
+            <div class="response show" id="r-post">
+              <div class="response-bar ok" id="r-post-bar">Menunggu...</div>
+              <div class="response-pre" id="r-post-pre">
+                Belum ada response. Klik "Kirim Data" untuk mencoba.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PUT — Update -->
+        <div class="card">
+          <div class="card-head">
+            <span class="method-tag tag-put">PUT</span>
+            <h3>Update Data</h3>
+          </div>
+          <div class="card-body">
+            <div class="field">
+              <label>NPM yang diupdate *</label
+              ><input type="text" id="u-npm" placeholder="624C0004" />
+            </div>
+            <div class="field">
+              <label>Nama baru</label
+              ><input
+                type="text"
+                id="u-nama"
+                placeholder="Kosongkan jika tidak diubah"
+              />
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Prodi baru</label
+                ><input
+                  type="text"
+                  id="u-prodi"
+                  placeholder="Kosongkan jika tidak diubah"
+                />
+              </div>
+              <div class="field">
+                <label>Kelas baru</label
+                ><input
+                  type="text"
+                  id="u-kelas"
+                  placeholder="Kosongkan jika tidak diubah"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <label>Pesan baru</label
+              ><textarea
+                id="u-pesan"
+                placeholder="Kosongkan jika tidak diubah"
+                style="min-height: 56px"
+              ></textarea>
+            </div>
+
+            <div class="todo-wrap">
+              <button class="todo-toggle" onclick="toggleTodo(this)">
+                <span class="todo-toggle-left"
+                  >✏️ TUGAS — fungsi updateData()</span
+                >
+                <span class="todo-toggle-icon">▼</span>
+              </button>
+              <div class="todo-body">
+                <span
+                  >const url = BASE_URL + <span class="hl">"/api/..."</span> +
+                  <span class="hl">npm</span></span
+                ><br />
+                <span class="cm">// path parameter: NPM dimasukkan ke URL</span
+                ><br /><br />
+                <span>const res = await fetch(url, {</span><br />
+                <span>&nbsp;&nbsp;method: <span class="hl">"..."</span>,</span
+                ><br />
+                <span
+                  >&nbsp;&nbsp;headers: { "Content-Type":
+                  <span class="hl">"..."</span> },</span
+                ><br />
+                <span
+                  >&nbsp;&nbsp;body: JSON.stringify(body)
+                  <span class="cm">// sudah disiapkan</span></span
+                ><br />
+                <span>})</span>
+              </div>
+            </div>
+
+            <button class="btn btn-put" id="btn-put" onclick="updateData()">
+              Update Data
+            </button>
+            <div class="response" id="r-put">
+              <div class="response-bar ok" id="r-put-bar"></div>
+              <div class="response-pre" id="r-put-pre"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ KANAN: GET ONE + DELETE ══ -->
+      <div class="col-right">
+        <!-- GET ONE — Cari -->
+        <div class="card">
+          <div class="card-head">
+            <span class="method-tag tag-get">GET</span>
+            <h3>Cari Mahasiswa by NPM</h3>
+          </div>
+          <div class="card-body">
+            <div class="field">
+              <label>NPM</label
+              ><input type="text" id="s-npm" placeholder="624C0004" />
+            </div>
+
+            <div class="todo-wrap">
+              <button class="todo-toggle" onclick="toggleTodo(this)">
+                <span class="todo-toggle-left"
+                  >✏️ TUGAS — fungsi cariByNpm()</span
+                >
+                <span class="todo-toggle-icon">▼</span>
+              </button>
+              <div class="todo-body">
+                <span
+                  >const npm = <span class="hl">...</span>
+                  <span class="cm">// dari input #s-npm</span></span
+                ><br />
+                <span
+                  >const url = BASE_URL + <span class="hl">"/api/..."</span> +
+                  <span class="hl">npm</span></span
+                ><br /><br />
+                <span>const res = await fetch(<span class="hl">url</span>)</span
+                ><br />
+                <span class="cm"
+                  >// GET tidak butuh method/headers/body tambahan</span
+                >
+              </div>
+            </div>
+
+            <button class="btn btn-get" id="btn-cari" onclick="cariByNpm()">
+              Cari
+            </button>
+            <div class="response" id="r-get-one">
+              <div class="response-bar ok" id="r-get-one-bar"></div>
+              <div class="response-pre" id="r-get-one-pre"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DELETE — Hapus -->
+        <div class="card">
+          <div class="card-head">
+            <span class="method-tag tag-delete">DELETE</span>
+            <h3>Request Hapus Data</h3>
+          </div>
+          <div class="card-body">
+            <div class="warn-box">
+              ⚠️ Data tidak langsung dihapus — request masuk ke antrian dan
+              menunggu persetujuan dosen.
+            </div>
+            <div class="field">
+              <label>NPM yang ingin dihapus *</label
+              ><input type="text" id="d-npm" placeholder="624C0004" />
+            </div>
+
+            <div class="todo-wrap">
+              <button class="todo-toggle" onclick="toggleTodo(this)">
+                <span class="todo-toggle-left"
+                  >✏️ TUGAS — fungsi requestHapus()</span
+                >
+                <span class="todo-toggle-icon">▼</span>
+              </button>
+              <div class="todo-body">
+                <span
+                  >const npm = <span class="hl">...</span>
+                  <span class="cm">// dari input #d-npm</span></span
+                ><br />
+                <span
+                  >const url = BASE_URL + <span class="hl">"/api/..."</span> +
+                  <span class="hl">npm</span></span
+                ><br /><br />
+                <span>const res = await fetch(url, {</span><br />
+                <span>&nbsp;&nbsp;method: <span class="hl">"..."</span></span
+                ><br />
+                <span class="cm">&nbsp;&nbsp;// DELETE tidak butuh body</span
+                ><br />
+                <span>})</span>
+              </div>
+            </div>
+
+            <button
+              class="btn btn-delete"
+              id="btn-delete"
+              onclick="requestHapus()"
+            >
+              Request Hapus
+            </button>
+            <div class="response" id="r-delete">
+              <div class="response-bar ok" id="r-delete-bar"></div>
+              <div class="response-pre" id="r-delete-pre"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ FULL WIDTH: GET ALL ══ -->
+      <div class="card full-width">
+        <div class="card-head">
+          <span class="method-tag tag-get">GET</span>
+          <h3>Semua Data Mahasiswa</h3>
+          <button
+            class="btn btn-refresh"
+            id="btn-ambil"
+            onclick="ambilSemua()"
+            style="margin-left: auto"
+          >
+            ↓ Ambil Data
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="todo-wrap">
+            <button class="todo-toggle" onclick="toggleTodo(this)">
+              <span class="todo-toggle-left"
+                >✏️ TUGAS — fungsi ambilSemua()</span
+              >
+              <span class="todo-toggle-icon">▼</span>
+            </button>
+            <div class="todo-body">
+              <span
+                >const url = BASE_URL + <span class="hl">"/api/..."</span></span
+              ><br />
+              <span class="cm">// endpoint untuk mengambil semua data</span
+              ><br /><br />
+              <span>const res = await fetch(<span class="hl">url</span>)</span
+              ><br />
+              <span>const json = await res.json()</span><br /><br />
+              <span class="cm">// json.data adalah array mahasiswa</span><br />
+              <span class="cm"
+                >// loop json.data, buat &lt;tr&gt; tiap item, masukkan ke
+                #tbl-body</span
+              ><br />
+              <span class="cm"
+                >// gunakan class td-npm, td-pesan, td-status, st-active,
+                st-pending</span
+              >
+            </div>
+          </div>
+
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>NPM</th>
+                  <th>Nama</th>
+                  <th>Prodi</th>
+                  <th>Kelas</th>
+                  <th>Pesan</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-body">
+                <tr>
+                  <td class="empty" colspan="6">
+                    Klik "Ambil Data" untuk memuat data dari server
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <script>
+      // ═══════════════════════════════════════════════════════════
+      //  KONFIGURASI SERVER — IP & Port disimpan ke localStorage
+      // ═══════════════════════════════════════════════════════════
+
+      const LS_IP = "praktikum_ip";
+      const LS_PORT = "praktikum_port";
+
+      function loadConfig() {
+        const ip = localStorage.getItem(LS_IP) || "192.168.1.10";
+        const port = localStorage.getItem(LS_PORT) || "3000";
+        document.getElementById("inp-ip").value = ip;
+        document.getElementById("inp-port").value = port;
+        updatePreview();
+      }
+
+      function saveConfig() {
+        const ip = document.getElementById("inp-ip").value.trim();
+        const port = document.getElementById("inp-port").value.trim();
+        localStorage.setItem(LS_IP, ip);
+        localStorage.setItem(LS_PORT, port);
+        updatePreview();
+      }
+
+      function updatePreview() {
+        const ip = document.getElementById("inp-ip").value.trim();
+        const port = document.getElementById("inp-port").value.trim();
+        document.getElementById("url-preview").textContent =
+          "http://" + (ip || "—") + ":" + (port || "—");
+      }
+
+      function getBaseUrl() {
+        const ip = document.getElementById("inp-ip").value.trim();
+        const port = document.getElementById("inp-port").value.trim();
+        return "http://" + ip + ":" + port;
+      }
+
+      // Update preview & simpan otomatis saat input berubah
+      document.getElementById("inp-ip").addEventListener("input", () => {
+        updatePreview();
+        saveConfig();
+      });
+      document.getElementById("inp-port").addEventListener("input", () => {
+        updatePreview();
+        saveConfig();
+      });
+
+      // ═══════════════════════════════════════════════════════════
+      //  HELPER — sudah jadi, tidak perlu diubah
+      // ═══════════════════════════════════════════════════════════
+
+      function tampilResponse(id, status, data) {
+        const box = document.getElementById("r-" + id);
+        const bar = document.getElementById("r-" + id + "-bar");
+        const pre = document.getElementById("r-" + id + "-pre");
+        const ok = status >= 200 && status < 300;
+        const pend = data?.status === "pending";
+        box.classList.add("show");
+        bar.className =
+          "response-bar " + (pend ? "pending" : ok ? "ok" : "err");
+        bar.textContent = (pend ? "⏳" : ok ? "✓" : "✗") + "  HTTP " + status;
+        pre.textContent = JSON.stringify(data, null, 2);
+
+        // toast otomatis berdasarkan status HTTP — tidak perlu diubah
+        if (pend) {
+          notif("⏳ Menunggu persetujuan dosen", "inf");
+        } else {
+          const pesan = {
+            200: "✓ Berhasil",
+            201: "✓ Data tersimpan",
+            400: "✗ Request tidak valid",
+            404: "✗ Data tidak ditemukan",
+            409: "✗ Konflik data (NPM sudah terdaftar atau sudah pending)",
+            422: "✗ Format data salah",
+            500: "✗ Server error",
+          }[status];
+          if (pesan) notif(pesan, ok ? "ok" : "err");
+        }
+      }
+
+      function setBtn(id, loading) {
+        const b = document.getElementById(id);
+        b.disabled = loading;
+        if (loading) {
+          b.dataset.txt = b.textContent;
+          b.innerHTML = '<span class="spin"></span>';
+        } else b.textContent = b.dataset.txt;
+      }
+
+      function notif(msg, type) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "show " + type;
+        clearTimeout(t._);
+        t._ = setTimeout(() => t.classList.remove("show"), 3000);
+      }
+
+      function toggleTodo(btn) {
+        const body = btn.nextElementSibling;
+        const icon = btn.querySelector(".todo-toggle-icon");
+        const open = body.classList.toggle("open");
+        icon.classList.toggle("open", open);
+      }
+
+      // ═══════════════════════════════════════════════════════════
+      //  CEK KONEKSI — sudah jadi
+      // ═══════════════════════════════════════════════════════════
+
+      async function cekKoneksi() {
+        saveConfig();
+        const dot = document.getElementById("dot");
+        const txt = document.getElementById("srv-txt");
+        notif("Menghubungkan ke server...", "inf");
+        try {
+          const res = await fetch(getBaseUrl() + "/api/status");
+          const data = await res.json();
+          const total = data.data?.total_mahasiswa ?? 0;
+          dot.className = "dot online";
+          txt.textContent = "online · " + total + " data";
+          notif("✓ Server terhubung — " + total + " data tersedia", "ok");
+        } catch {
+          dot.className = "dot offline";
+          txt.textContent = "tidak terhubung";
+          notif("✗ Gagal terhubung. Cek IP, Port, dan koneksi WiFi.", "err");
+        }
+      }
+
+      // ═══════════════════════════════════════════════════════════
+      //  FUNGSI YANG HARUS DILENGKAPI MAHASISWA
+      //  ↓↓↓ KERJAKAN DI BAGIAN INI ↓↓↓
+      // ═══════════════════════════════════════════════════════════
+
+      // ── 1. GET ALL ──────────────────────────────────────────────
+      async function ambilSemua() {
+        setBtn("btn-ambil", true);
+        try {
+          const BASE_URL = getBaseUrl();
+          const url = BASE_URL + "/api/..."; // ← GANTI INI
+
+          const res = await fetch(url);
+          const json = await res.json();
+
+          if (!res.ok) {
+            notif("✗ Gagal mengambil data dari server", "err");
+            return;
+          }
+
+          const total = json.data?.length ?? 0;
+          notif("✓ " + total + " data berhasil dimuat", "ok");
+
+          const tbody = document.getElementById("tbl-body");
+          tbody.innerHTML = "";
+
+          // TODO: render tiap item dari json.data ke dalam tabel
+          // Petunjuk: gunakan json.data.forEach(m => { ... })
+          // Tiap item punya: m.npm, m.nama, m.prodi, m.kelas, m.pesan, m.status
+        } catch (err) {
+          notif("Error: " + err.message, "err");
+        } finally {
+          setBtn("btn-ambil", false);
+        }
+      }
+
+      // ── 2. POST ─────────────────────────────────────────────────
+      async function submitDaftar() {
+        setBtn("btn-post", true);
+        try {
+          const npm = document.getElementById("f-npm").value.trim();
+          const nama = document.getElementById("f-nama").value.trim();
+          const prodi = document.getElementById("f-prodi").value.trim();
+          const kelas = document.getElementById("f-kelas").value.trim();
+          const pesan = document.getElementById("f-pesan").value.trim();
+
+          if (!npm || !nama || !prodi || !kelas) {
+            notif("NPM, Nama, Prodi, dan Kelas wajib diisi!", "err");
+            return;
+          }
+
+          const BASE_URL = getBaseUrl();
+          const url = BASE_URL + "/api/..."; // ← GANTI INI
+
+          const res = await fetch(url, {
+            method: "...", // ← GANTI INI
+            headers: { "Content-Type": "..." }, // ← GANTI INI
+            body: JSON.stringify({ npm, nama, prodi, kelas, pesan }),
+          });
+
+          const data = await res.json();
+          tampilResponse("post", res.status, data);
+
+          if (res.ok) {
+            notif("Data berhasil dikirim!", "ok");
+            ambilSemua();
+          } else notif(data.detail?.message || "Gagal mengirim data", "err");
+        } catch (err) {
+          notif("Error: " + err.message, "err");
+        } finally {
+          setBtn("btn-post", false);
+        }
+      }
+
+      // ── 3. GET ONE ──────────────────────────────────────────────
+      async function cariByNpm() {
+        setBtn("btn-cari", true);
+        try {
+          const npm = document.getElementById("s-npm").value.trim();
+          if (!npm) {
+            notif("NPM wajib diisi!", "err");
+            return;
+          }
+
+          const BASE_URL = getBaseUrl();
+          const url = BASE_URL + "/api/..." + npm; // ← GANTI INI (path parameter)
+
+          const res = await fetch(url);
+          const data = await res.json();
+          tampilResponse("get-one", res.status, data);
+
+          if (!res.ok) notif("NPM tidak ditemukan", "err");
+        } catch (err) {
+          notif("Error: " + err.message, "err");
+        } finally {
+          setBtn("btn-cari", false);
+        }
+      }
+
+      // ── 4. PUT ──────────────────────────────────────────────────
+      async function updateData() {
+        setBtn("btn-put", true);
+        try {
+          const npm = document.getElementById("u-npm").value.trim();
+          const nama = document.getElementById("u-nama").value.trim();
+          const prodi = document.getElementById("u-prodi").value.trim();
+          const kelas = document.getElementById("u-kelas").value.trim();
+          const pesan = document.getElementById("u-pesan").value.trim();
+
+          if (!npm) {
+            notif("NPM wajib diisi!", "err");
+            return;
+          }
+
+          const body = {};
+          if (nama) body.nama = nama;
+          if (prodi) body.prodi = prodi;
+          if (kelas) body.kelas = kelas;
+          if (pesan) body.pesan = pesan;
+
+          if (Object.keys(body).length === 0) {
+            notif("Isi minimal satu field yang ingin diubah!", "err");
+            return;
+          }
+
+          const BASE_URL = getBaseUrl();
+          const url = BASE_URL + "/api/..." + npm; // ← GANTI INI
+
+          const res = await fetch(url, {
+            method: "...", // ← GANTI INI
+            headers: { "Content-Type": "..." }, // ← GANTI INI
+            body: JSON.stringify(body),
+          });
+
+          const data = await res.json();
+          tampilResponse("put", res.status, data);
+
+          if (res.ok) {
+            notif("Data berhasil diupdate!", "ok");
+            ambilSemua();
+          } else notif(data.detail?.message || "Gagal update data", "err");
+        } catch (err) {
+          notif("Error: " + err.message, "err");
+        } finally {
+          setBtn("btn-put", false);
+        }
+      }
+
+      // ── 5. DELETE ───────────────────────────────────────────────
+      async function requestHapus() {
+        setBtn("btn-delete", true);
+        try {
+          const npm = document.getElementById("d-npm").value.trim();
+          if (!npm) {
+            notif("NPM wajib diisi!", "err");
+            return;
+          }
+
+          const BASE_URL = getBaseUrl();
+          const url = BASE_URL + "/api/..." + npm; // ← GANTI INI
+
+          const res = await fetch(url, {
+            method: "...", // ← GANTI INI
+          });
+
+          const data = await res.json();
+          tampilResponse("delete", res.status, data);
+
+          if (res.ok)
+            notif("Request hapus terkirim! Tunggu persetujuan dosen.", "inf");
+          else notif(data.detail?.message || "Gagal mengirim request", "err");
+        } catch (err) {
+          notif("Error: " + err.message, "err");
+        } finally {
+          setBtn("btn-delete", false);
+        }
+      }
+
+      // ─────────────────────────────────────────────────────────
+      //  INIT
+      // ─────────────────────────────────────────────────────────
+      loadConfig(); // muat IP & Port dari localStorage
+      cekKoneksi(); // langsung cek saat halaman dibuka
+    </script>
+  </body>
+</html>

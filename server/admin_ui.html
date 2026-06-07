@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — Praktikum API</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0D1B2A; --navy-mid: #1A2E42; --navy-light: #243447;
+    --gold: #F5A623; --red: #E8453C; --teal: #2DD4BF; --green: #22C55E;
+    --white: #F8F5EE; --muted: #8A9BB0; --border: rgba(245,166,35,0.18);
+    --mono: 'DM Mono', monospace; --sans: 'DM Sans', sans-serif; --display: 'Syne', sans-serif;
+  }
+  body { background: var(--navy); color: var(--white); font-family: var(--sans); font-size: 15px; line-height: 1.6; min-height: 100vh; }
+
+  /* HEADER */
+  header { background: var(--navy-mid); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 58px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+  .brand { font-family: var(--display); font-weight: 700; font-size: 16px; color: var(--gold); }
+  .brand span { color: var(--muted); font-weight: 400; font-size: 13px; margin-left: 8px; font-family: var(--sans); }
+  .status-dot { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--teal); font-family: var(--mono); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); animation: blink 2s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* LAYOUT */
+  main { max-width: 1100px; margin: 0 auto; padding: 2rem; display: flex; flex-direction: column; gap: 2rem; }
+
+  /* STAT CARDS */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+  .stat-card { background: var(--navy-mid); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; }
+  .stat-card .stat-label { font-size: 12px; color: var(--muted); font-family: var(--mono); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  .stat-card .stat-value { font-family: var(--display); font-size: 36px; font-weight: 700; color: var(--white); line-height: 1; }
+  .stat-card.pending-card .stat-value { color: var(--gold); }
+  .stat-card.online-card .stat-value { color: var(--teal); font-size: 18px; padding-top: 6px; }
+
+  /* PANELS */
+  .panel { background: var(--navy-mid); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .panel-header { padding: 16px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .panel-title { font-family: var(--display); font-size: 16px; font-weight: 700; color: var(--white); }
+  .panel-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .panel-body { padding: 0; }
+
+  /* BADGE */
+  .badge { display: inline-block; font-family: var(--mono); font-size: 11px; padding: 3px 9px; border-radius: 100px; font-weight: 500; }
+  .badge-pending { background: rgba(245,166,35,0.15); color: var(--gold); border: 1px solid rgba(245,166,35,0.3); }
+  .badge-active  { background: rgba(34,197,94,0.12);  color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+  .badge-count   { background: rgba(138,155,176,0.15); color: var(--muted); border: 1px solid rgba(138,155,176,0.2); }
+
+  /* TABLE */
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th { padding: 10px 18px; text-align: left; font-size: 11px; font-family: var(--mono); color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid var(--border); font-weight: 500; background: rgba(255,255,255,0.02); }
+  tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,0.03); }
+  tbody td { padding: 13px 18px; color: rgba(248,245,238,0.85); vertical-align: middle; }
+  .npm-cell { font-family: var(--mono); font-size: 13px; color: var(--gold); }
+  .pesan-cell { font-size: 12px; color: var(--muted); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .empty-row td { text-align: center; padding: 40px; color: var(--muted); font-size: 14px; }
+
+  /* BUTTONS */
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; font-family: var(--sans); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-approve { background: rgba(34,197,94,0.12);  color: var(--green);  border-color: rgba(34,197,94,0.3); }
+  .btn-approve:hover:not(:disabled) { background: rgba(34,197,94,0.22); }
+  .btn-reject  { background: rgba(232,69,60,0.1);   color: var(--red);    border-color: rgba(232,69,60,0.25); }
+  .btn-reject:hover:not(:disabled) { background: rgba(232,69,60,0.2); }
+  .btn-danger  { background: rgba(232,69,60,0.1);   color: var(--red);    border-color: rgba(232,69,60,0.25); font-size: 12px; padding: 5px 12px; }
+  .btn-danger:hover:not(:disabled) { background: rgba(232,69,60,0.2); }
+  .btn-refresh { background: rgba(245,166,35,0.1); color: var(--gold); border-color: var(--border); font-size: 12px; padding: 6px 14px; }
+  .btn-refresh:hover { background: rgba(245,166,35,0.18); }
+
+  /* TOAST */
+  #toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 500; opacity: 0; transition: opacity 0.25s; pointer-events: none; z-index: 999; }
+  #toast.show { opacity: 1; }
+  #toast.success { background: rgba(34,197,94,0.15);  color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  #toast.error   { background: rgba(232,69,60,0.15);  color: var(--red);   border: 1px solid rgba(232,69,60,0.3); }
+  #toast.info    { background: rgba(245,166,35,0.12); color: var(--gold);  border: 1px solid var(--border); }
+
+  /* MODAL KONFIRMASI */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+  .modal-overlay.show { opacity: 1; pointer-events: all; }
+  .modal { background: var(--navy-mid); border: 1px solid var(--border); border-radius: 14px; padding: 28px 32px; max-width: 400px; width: 90%; }
+  .modal h3 { font-family: var(--display); font-size: 18px; margin-bottom: 10px; }
+  .modal p  { font-size: 14px; color: var(--muted); margin-bottom: 22px; }
+  .modal p strong { color: var(--white); }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+  @media (max-width: 600px) {
+    main { padding: 1rem; }
+    header { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Admin Panel <span>Praktikum API — Institut Mahardika</span></div>
+  <div class="status-dot"><div class="dot"></div><span id="server-status">connecting...</span></div>
+</header>
+
+<main>
+  <!-- STAT CARDS -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-label">Total Mahasiswa</div>
+      <div class="stat-value" id="stat-total">—</div>
+    </div>
+    <div class="stat-card pending-card">
+      <div class="stat-label">Pending Delete</div>
+      <div class="stat-value" id="stat-pending">—</div>
+    </div>
+    <div class="stat-card online-card">
+      <div class="stat-label">Status Server</div>
+      <div class="stat-value" id="stat-status">—</div>
+    </div>
+  </div>
+
+  <!-- PENDING DELETE -->
+  <div class="panel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">⏳ Permintaan Hapus — Menunggu Persetujuan</div>
+        <div class="panel-sub">Mahasiswa yang request DELETE datanya — perlu approve atau reject</div>
+      </div>
+      <button class="btn btn-refresh" onclick="loadAll()">↻ Refresh</button>
+    </div>
+    <div class="panel-body">
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>NPM</th>
+              <th>Nama</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="pending-tbody">
+            <tr class="empty-row"><td colspan="3">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEMUA MAHASISWA -->
+  <div class="panel">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">👥 Semua Data Mahasiswa</div>
+        <div class="panel-sub">Data yang sudah masuk ke server dari mahasiswa</div>
+      </div>
+      <button class="btn btn-danger" onclick="confirmClearAll()">🗑 Reset Semua Data</button>
+    </div>
+    <div class="panel-body">
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>NPM</th>
+              <th>Nama</th>
+              <th>Prodi</th>
+              <th>Kelas</th>
+              <th>Pesan</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="mahasiswa-tbody">
+            <tr class="empty-row"><td colspan="6">Memuat data...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- MODAL KONFIRMASI -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3 id="modal-title">Konfirmasi</h3>
+    <p id="modal-body">Apakah kamu yakin?</p>
+    <div class="modal-actions">
+      <button class="btn btn-reject" onclick="closeModal()">Batal</button>
+      <button class="btn btn-approve" id="modal-confirm-btn">Ya, lanjutkan</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+  const BASE = window.location.origin
+
+  // ── Toast ──────────────────────────────────────────────────────────────
+  function toast(msg, type = 'info') {
+    const el = document.getElementById('toast')
+    el.textContent = msg
+    el.className = `show ${type}`
+    clearTimeout(el._t)
+    el._t = setTimeout(() => el.classList.remove('show'), 3000)
+  }
+
+  // ── Modal ──────────────────────────────────────────────────────────────
+  let _modalAction = null
+  function showModal(title, body, onConfirm) {
+    document.getElementById('modal-title').textContent = title
+    document.getElementById('modal-body').innerHTML = body
+    _modalAction = onConfirm
+    document.getElementById('modal-confirm-btn').onclick = () => { closeModal(); onConfirm() }
+    document.getElementById('modal').classList.add('show')
+  }
+  function closeModal() { document.getElementById('modal').classList.remove('show') }
+
+  // ── API calls ──────────────────────────────────────────────────────────
+  async function api(method, path) {
+    const res = await fetch(BASE + path, { method })
+    return res.json()
+  }
+
+  // ── Render helpers ─────────────────────────────────────────────────────
+  function renderPending(list) {
+    const tbody = document.getElementById('pending-tbody')
+    if (!list.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="3">Tidak ada permintaan pending</td></tr>'
+      return
+    }
+    tbody.innerHTML = list.map(p => `
+      <tr>
+        <td class="npm-cell">${p.npm}</td>
+        <td>${p.nama}</td>
+        <td style="display:flex;gap:8px;padding:10px 18px">
+          <button class="btn btn-approve" onclick="doApprove('${p.npm}','${p.nama}')">✓ Approve</button>
+          <button class="btn btn-reject"  onclick="doReject('${p.npm}','${p.nama}')">✗ Reject</button>
+        </td>
+      </tr>`).join('')
+  }
+
+  function renderMahasiswa(list, pendingNpms) {
+    const tbody = document.getElementById('mahasiswa-tbody')
+    if (!list.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="6">Belum ada data mahasiswa</td></tr>'
+      return
+    }
+    tbody.innerHTML = list.map(m => {
+      const isPending = pendingNpms.includes(m.npm)
+      const badge = isPending
+        ? '<span class="badge badge-pending">pending delete</span>'
+        : '<span class="badge badge-active">active</span>'
+      return `
+        <tr>
+          <td class="npm-cell">${m.npm}</td>
+          <td>${m.nama}</td>
+          <td>${m.prodi}</td>
+          <td>${m.kelas}</td>
+          <td class="pesan-cell" title="${m.pesan || ''}">${m.pesan || '<span style="color:var(--muted)">—</span>'}</td>
+          <td>${badge}</td>
+        </tr>`
+    }).join('')
+  }
+
+  // ── Load all data ──────────────────────────────────────────────────────
+  async function loadAll() {
+    try {
+      const [statusRes, mahasiswaRes, pendingRes] = await Promise.all([
+        api('GET', '/api/status'),
+        api('GET', '/api/mahasiswa/'),
+        api('GET', '/admin/pending')
+      ])
+
+      // stats
+      document.getElementById('stat-total').textContent   = statusRes.data?.total_mahasiswa ?? '—'
+      document.getElementById('stat-pending').textContent = statusRes.data?.pending_delete ?? '—'
+      document.getElementById('stat-status').textContent  = statusRes.status === 'online' ? '● Online' : '✗ Offline'
+      document.getElementById('server-status').textContent = 'server online'
+
+      const pendingNpms = (pendingRes.data || []).map(p => p.npm)
+      renderPending(pendingRes.data || [])
+      renderMahasiswa(mahasiswaRes.data || [], pendingNpms)
+
+    } catch (e) {
+      document.getElementById('server-status').textContent = 'error connecting'
+      toast('Gagal terhubung ke server', 'error')
+    }
+  }
+
+  // ── Actions ────────────────────────────────────────────────────────────
+  async function doApprove(npm, nama) {
+    showModal(
+      'Approve Penghapusan',
+      `Data <strong>${nama}</strong> (NPM: <strong>${npm}</strong>) akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.`,
+      async () => {
+        const res = await api('POST', `/admin/approve/${npm}`)
+        toast(res.message, res.status === 'success' ? 'success' : 'error')
+        loadAll()
+      }
+    )
+  }
+
+  async function doReject(npm, nama) {
+    showModal(
+      'Reject Penghapusan',
+      `Permintaan hapus dari <strong>${nama}</strong> (NPM: <strong>${npm}</strong>) akan ditolak. Data tetap tersimpan.`,
+      async () => {
+        const res = await api('POST', `/admin/reject/${npm}`)
+        toast(res.message, res.status === 'success' ? 'success' : 'error')
+        loadAll()
+      }
+    )
+  }
+
+  function confirmClearAll() {
+    showModal(
+      '⚠️ Reset Semua Data',
+      'Seluruh data mahasiswa dan pending delete akan dihapus permanen. Ini tidak bisa dibatalkan.',
+      async () => {
+        const res = await api('DELETE', '/admin/clear-all')
+        toast(res.message, res.status === 'success' ? 'success' : 'error')
+        loadAll()
+      }
+    )
+  }
+
+  // ── Init ───────────────────────────────────────────────────────────────
+  loadAll()
+  setInterval(loadAll, 10000) // auto-refresh tiap 10 detik
+</script>
+</body>
+</html>
