@@ -24,10 +24,10 @@ rpl-api/
 │       ├── router_mahasiswa.py
 │       └── router_admin.py
 └── client/          # GitHub Pages — diakses mahasiswa via browser
-    ├── index.html          ← landing page
-    ├── template.html       ← file tugas mahasiswa
-    ├── panduan-client.html ← panduan mengerjakan template
-    └── panduan-postman.html← panduan Postman Web
+    ├── index.html                      ← landing page
+    ├── client-mahasiswa-template.html  ← file tugas mahasiswa
+    ├── panduan-client.html             ← panduan mengerjakan template
+    └── panduan-postman.html            ← panduan Postman Web
 ```
 
 ---
@@ -89,7 +89,7 @@ Diakses via GitHub Pages:
 | Halaman | URL |
 |---------|-----|
 | Landing page | `https://institut-mahardika.github.io/rpl-api/` |
-| Template tugas | `https://institut-mahardika.github.io/rpl-api/template.html` |
+| Template tugas | `https://institut-mahardika.github.io/rpl-api/client-mahasiswa-template.html` |
 | Panduan client | `https://institut-mahardika.github.io/rpl-api/panduan-client.html` |
 | Panduan Postman | `https://institut-mahardika.github.io/rpl-api/panduan-postman.html` |
 
