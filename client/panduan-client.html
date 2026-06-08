@@ -1,334 +1,856 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panduan Sesi 2 — Praktikum API</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panduan Sesi 2 — Praktikum API</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-  :root {
-    --bg:      #F5F3EE;
-    --card:    #FFFFFF;
-    --navy:    #1B2B3A;
-    --navy-s:  #243447;
-    --gold:    #D4841A;
-    --gold-bg: #FFF8EE;
-    --teal:    #1A7B6E;
-    --teal-bg: #EAF5F3;
-    --red:     #C0392B;
-    --red-bg:  #FEF0EE;
-    --blue:    #1E5FA8;
-    --blue-bg: #EEF4FC;
-    --border:  #E2DDD6;
-    --text:    #1B2B3A;
-    --muted:   #7A8694;
-    --mono:    'Fira Code', monospace;
-    --sans:    'Plus Jakarta Sans', sans-serif;
-  }
+      :root {
+        --bg: #f5f3ee;
+        --card: #ffffff;
+        --navy: #1b2b3a;
+        --navy-s: #243447;
+        --gold: #d4841a;
+        --gold-bg: #fff8ee;
+        --teal: #1a7b6e;
+        --teal-bg: #eaf5f3;
+        --red: #c0392b;
+        --red-bg: #fef0ee;
+        --blue: #1e5fa8;
+        --blue-bg: #eef4fc;
+        --border: #e2ddd6;
+        --text: #1b2b3a;
+        --muted: #7a8694;
+        --mono: "Fira Code", monospace;
+        --sans: "Plus Jakarta Sans", sans-serif;
+      }
 
-  html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.7; }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+        font-size: 15px;
+        line-height: 1.7;
+      }
 
-  /* ── NAV ─────────────────────────────── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(27,43,58,0.97); backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 2rem; height: 54px;
-  }
-  .nav-brand { font-weight: 800; font-size: 14px; color: white; letter-spacing: -0.01em; }
-  .nav-brand em { font-style: normal; color: #F5A623; }
-  .nav-links { display: flex; list-style: none; gap: 0; }
-  .nav-links a { display: block; padding: 0 12px; height: 54px; line-height: 54px; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; white-space: nowrap; }
-  .nav-links a:hover { color: white; }
-  .nav-links a.active { color: #F5A623; border-bottom: 2px solid #F5A623; }
-  .progress { position: fixed; top: 54px; left: 0; height: 2px; background: var(--gold); z-index: 99; transition: width 0.1s; width: 0; }
+      /* ── NAV ─────────────────────────────── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: rgba(27, 43, 58, 0.97);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2rem;
+        height: 54px;
+      }
+      .nav-brand {
+        font-weight: 800;
+        font-size: 14px;
+        color: white;
+        letter-spacing: -0.01em;
+      }
+      .nav-brand em {
+        font-style: normal;
+        color: #f5a623;
+      }
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 0;
+      }
+      .nav-links a {
+        display: block;
+        padding: 0 12px;
+        height: 54px;
+        line-height: 54px;
+        font-size: 12px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.5);
+        text-decoration: none;
+        transition: color 0.2s;
+        white-space: nowrap;
+      }
+      .nav-links a:hover {
+        color: white;
+      }
+      .nav-links a.active {
+        color: #f5a623;
+        border-bottom: 2px solid #f5a623;
+      }
+      .progress {
+        position: fixed;
+        top: 54px;
+        left: 0;
+        height: 2px;
+        background: var(--gold);
+        z-index: 99;
+        transition: width 0.1s;
+        width: 0;
+      }
 
-  /* ── HERO ────────────────────────────── */
-  .hero {
-    background: var(--navy);
-    padding: 110px 2rem 60px;
-    text-align: center;
-  }
-  .hero-pill {
-    display: inline-flex; align-items: center; gap: 8px;
-    border: 1px solid rgba(245,166,35,0.3); border-radius: 100px;
-    padding: 5px 16px; font-size: 12px; font-family: var(--mono);
-    color: var(--gold); background: rgba(245,166,35,0.07); margin-bottom: 24px;
-  }
-  .hero-pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: blink 2s ease-in-out infinite; }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-  .hero h1 { font-size: clamp(2rem,5vw,3.2rem); font-weight: 800; color: white; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 16px; }
-  .hero h1 span { color: #F5A623; }
-  .hero p { color: rgba(255,255,255,0.55); font-size: 1.05rem; max-width: 520px; margin: 0 auto 40px; }
-  .checklist-hero {
-    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; max-width: 700px; margin: 0 auto;
-  }
-  .check-pill {
-    display: flex; align-items: center; gap: 6px;
-    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 100px; padding: 6px 14px; font-size: 13px; color: rgba(255,255,255,0.75);
-  }
-  .check-pill .num { font-family: var(--mono); font-size: 11px; color: var(--gold); }
+      /* ── HERO ────────────────────────────── */
+      .hero {
+        background: var(--navy);
+        padding: 110px 2rem 60px;
+        text-align: center;
+      }
+      .hero-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid rgba(245, 166, 35, 0.3);
+        border-radius: 100px;
+        padding: 5px 16px;
+        font-size: 12px;
+        font-family: var(--mono);
+        color: var(--gold);
+        background: rgba(245, 166, 35, 0.07);
+        margin-bottom: 24px;
+      }
+      .hero-pill-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--gold);
+        animation: blink 2s ease-in-out infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+      .hero h1 {
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        font-weight: 800;
+        color: white;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        margin-bottom: 16px;
+      }
+      .hero h1 span {
+        color: #f5a623;
+      }
+      .hero p {
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 1.05rem;
+        max-width: 520px;
+        margin: 0 auto 40px;
+      }
+      .checklist-hero {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+      .check-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 100px;
+        padding: 6px 14px;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.75);
+      }
+      .check-pill .num {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--gold);
+      }
 
-  /* ── LAYOUT ──────────────────────────── */
-  .wrapper { max-width: 820px; margin: 0 auto; padding: 0 2rem; }
+      /* ── LAYOUT ──────────────────────────── */
+      .wrapper {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
 
-  section { padding: 72px 0; border-top: 1px solid rgba(27,43,58,0.08); }
-  section:first-of-type { border-top: none; }
+      section {
+        padding: 72px 0;
+        border-top: 1px solid rgba(27, 43, 58, 0.08);
+      }
+      section:first-of-type {
+        border-top: none;
+      }
 
-  .sec-tag {
-    font-family: var(--mono); font-size: 11px; color: var(--gold);
-    letter-spacing: 0.12em; text-transform: uppercase;
-    margin-bottom: 10px; display: flex; align-items: center; gap: 10px;
-  }
-  .sec-tag::after { content: ''; flex: 1; height: 1px; background: rgba(212,132,26,0.25); max-width: 50px; }
+      .sec-tag {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--gold);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sec-tag::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: rgba(212, 132, 26, 0.25);
+        max-width: 50px;
+      }
 
-  h2 { font-size: clamp(1.5rem,3.5vw,2rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 14px; line-height: 1.2; }
-  h3 { font-size: 1.1rem; font-weight: 700; margin: 28px 0 10px; color: var(--navy); }
-  p  { color: rgba(27,43,58,0.75); margin-bottom: 14px; }
-  p:last-child { margin-bottom: 0; }
+      h2 {
+        font-size: clamp(1.5rem, 3.5vw, 2rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin-bottom: 14px;
+        line-height: 1.2;
+      }
+      h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 28px 0 10px;
+        color: var(--navy);
+      }
+      p {
+        color: rgba(27, 43, 58, 0.75);
+        margin-bottom: 14px;
+      }
+      p:last-child {
+        margin-bottom: 0;
+      }
 
-  /* ── STEP BADGE ──────────────────────── */
-  .step-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
-  .step-num {
-    width: 36px; height: 36px; border-radius: 50%; background: var(--navy);
-    color: white; font-family: var(--mono); font-size: 14px; font-weight: 500;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
-  }
-  .step-num.gold { background: var(--gold); }
-  .step-num.teal { background: var(--teal); }
-  .step-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; }
-  .step-sub   { font-size: 13px; color: var(--muted); }
+      /* ── STEP BADGE ──────────────────────── */
+      .step-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+      .step-num {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--navy);
+        color: white;
+        font-family: var(--mono);
+        font-size: 14px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .step-num.gold {
+        background: var(--gold);
+      }
+      .step-num.teal {
+        background: var(--teal);
+      }
+      .step-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .step-sub {
+        font-size: 13px;
+        color: var(--muted);
+      }
 
-  /* ── CODE BLOCK ──────────────────────── */
-  .code-block { background: var(--navy); border-radius: 10px; overflow: hidden; margin: 16px 0; }
-  .code-head  { display: flex; align-items: center; justify-content: space-between; padding: 9px 14px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.07); }
-  .code-dots  { display: flex; gap: 5px; }
-  .code-dots span { width: 10px; height: 10px; border-radius: 50%; }
-  .code-dots span:nth-child(1){background:#FF5F57} .code-dots span:nth-child(2){background:#FFBD2E} .code-dots span:nth-child(3){background:#27C93F}
-  .code-fname { font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,0.35); }
-  .copy-btn   { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,0.35); background: none; border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 3px 9px; cursor: pointer; transition: all 0.2s; }
-  .copy-btn:hover { color: white; border-color: rgba(255,255,255,0.3); }
-  pre { padding: 18px 20px; font-family: var(--mono); font-size: 13px; line-height: 1.85; color: #C8D8E8; overflow-x: auto; white-space: pre; }
+      /* ── CODE BLOCK ──────────────────────── */
+      .code-block {
+        background: var(--navy);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 16px 0;
+      }
+      .code-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 9px 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      .code-dots {
+        display: flex;
+        gap: 5px;
+      }
+      .code-dots span {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+      .code-dots span:nth-child(1) {
+        background: #ff5f57;
+      }
+      .code-dots span:nth-child(2) {
+        background: #ffbd2e;
+      }
+      .code-dots span:nth-child(3) {
+        background: #27c93f;
+      }
+      .code-fname {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.35);
+      }
+      .copy-btn {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.35);
+        background: none;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 4px;
+        padding: 3px 9px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .copy-btn:hover {
+        color: white;
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+      pre {
+        padding: 18px 20px;
+        font-family: var(--mono);
+        font-size: 13px;
+        line-height: 1.85;
+        color: #c8d8e8;
+        overflow-x: auto;
+        white-space: pre;
+      }
 
-  /* syntax highlight */
-  .k  { color: #E06C75; } /* keyword */
-  .s  { color: #98C379; } /* string */
-  .n  { color: #D19A66; } /* number */
-  .f  { color: #61AFEF; } /* function/key */
-  .v  { color: #56B6C2; } /* value/bool */
-  .c  { color: #5C6370; font-style: italic; } /* comment */
-  .hl { color: #F5A623; font-weight: 500; } /* highlight — jawaban */
-  .dim{ opacity: 0.45; } /* dimmed */
+      /* syntax highlight */
+      .k {
+        color: #e06c75;
+      } /* keyword */
+      .s {
+        color: #98c379;
+      } /* string */
+      .n {
+        color: #d19a66;
+      } /* number */
+      .f {
+        color: #61afef;
+      } /* function/key */
+      .v {
+        color: #56b6c2;
+      } /* value/bool */
+      .c {
+        color: #5c6370;
+        font-style: italic;
+      } /* comment */
+      .hl {
+        color: #f5a623;
+        font-weight: 500;
+      } /* highlight — jawaban */
+      .dim {
+        opacity: 0.45;
+      } /* dimmed */
 
-  /* ── INFO BOX ────────────────────────── */
-  .info-box, .warn-box, .ok-box, .tip-box {
-    border-radius: 10px; padding: 16px 20px; margin: 16px 0; font-size: 14px; line-height: 1.6;
-  }
-  .info-box { background: var(--blue-bg);  border: 1px solid rgba(30,95,168,0.2);  color: #0D3D6B; }
-  .warn-box { background: var(--gold-bg);  border: 1px solid rgba(212,132,26,0.25); color: #7A4F00; }
-  .ok-box   { background: var(--teal-bg);  border: 1px solid rgba(26,123,110,0.2);  color: #0D4F47; }
-  .tip-box  { background: #F0EEF8;         border: 1px solid rgba(80,60,160,0.18);  color: #3B2D6E; }
-  .box-title { font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 7px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; }
+      /* ── INFO BOX ────────────────────────── */
+      .info-box,
+      .warn-box,
+      .ok-box,
+      .tip-box {
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin: 16px 0;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .info-box {
+        background: var(--blue-bg);
+        border: 1px solid rgba(30, 95, 168, 0.2);
+        color: #0d3d6b;
+      }
+      .warn-box {
+        background: var(--gold-bg);
+        border: 1px solid rgba(212, 132, 26, 0.25);
+        color: #7a4f00;
+      }
+      .ok-box {
+        background: var(--teal-bg);
+        border: 1px solid rgba(26, 123, 110, 0.2);
+        color: #0d4f47;
+      }
+      .tip-box {
+        background: #f0eef8;
+        border: 1px solid rgba(80, 60, 160, 0.18);
+        color: #3b2d6e;
+      }
+      .box-title {
+        font-weight: 700;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
 
-  /* ── DIFF BLOCK ──────────────────────── */
-  .diff { background: var(--navy); border-radius: 10px; overflow: hidden; margin: 16px 0; }
-  .diff-head { padding: 9px 14px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.07); font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,0.35); display: flex; justify-content: space-between; align-items: center; }
-  .diff-tag  { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
-  .diff-tag.before { background: rgba(232,69,60,0.2);   color: #E8453C; }
-  .diff-tag.after  { background: rgba(45,212,191,0.15); color: #2DD4BF; }
-  .diff pre  { padding: 16px 20px; }
-  .diff .del { color: rgba(232,69,60,0.6); text-decoration: line-through; }
-  .diff .add { color: #98C379; }
+      /* ── DIFF BLOCK ──────────────────────── */
+      .diff {
+        background: var(--navy);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 16px 0;
+      }
+      .diff-head {
+        padding: 9px 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        font-family: var(--mono);
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.35);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .diff-tag {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
+      .diff-tag.before {
+        background: rgba(232, 69, 60, 0.2);
+        color: #e8453c;
+      }
+      .diff-tag.after {
+        background: rgba(45, 212, 191, 0.15);
+        color: #2dd4bf;
+      }
+      .diff pre {
+        padding: 16px 20px;
+      }
+      .diff .del {
+        color: rgba(232, 69, 60, 0.6);
+        text-decoration: line-through;
+      }
+      .diff .add {
+        color: #98c379;
+      }
 
-  /* ── TASK CARD ───────────────────────── */
-  .task-grid { display: grid; gap: 14px; margin: 20px 0; }
-  .task-card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-    padding: 20px 22px; display: flex; align-items: flex-start; gap: 14px;
-    transition: border-color 0.2s;
-  }
-  .task-card:hover { border-color: rgba(27,43,58,0.25); }
-  .task-card.done  { border-color: rgba(26,123,110,0.3); background: var(--teal-bg); }
-  .task-icon { font-size: 22px; min-width: 28px; }
-  .task-content h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-  .task-content p  { font-size: 13px; color: var(--muted); margin: 0; }
-  .task-method { font-family: var(--mono); font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 4px; margin-left: 6px; }
-  .m-get    { background: var(--teal-bg); color: var(--teal); }
-  .m-post   { background: var(--gold-bg); color: var(--gold); }
-  .m-put    { background: var(--blue-bg); color: var(--blue); }
-  .m-delete { background: var(--red-bg);  color: var(--red);  }
+      /* ── TASK CARD ───────────────────────── */
+      .task-grid {
+        display: grid;
+        gap: 14px;
+        margin: 20px 0;
+      }
+      .task-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px 22px;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        transition: border-color 0.2s;
+      }
+      .task-card:hover {
+        border-color: rgba(27, 43, 58, 0.25);
+      }
+      .task-card.done {
+        border-color: rgba(26, 123, 110, 0.3);
+        background: var(--teal-bg);
+      }
+      .task-icon {
+        font-size: 22px;
+        min-width: 28px;
+      }
+      .task-content h4 {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .task-content p {
+        font-size: 13px;
+        color: var(--muted);
+        margin: 0;
+      }
+      .task-method {
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 500;
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin-left: 6px;
+      }
+      .m-get {
+        background: var(--teal-bg);
+        color: var(--teal);
+      }
+      .m-post {
+        background: var(--gold-bg);
+        color: var(--gold);
+      }
+      .m-put {
+        background: var(--blue-bg);
+        color: var(--blue);
+      }
+      .m-delete {
+        background: var(--red-bg);
+        color: var(--red);
+      }
 
-  /* ── ERROR TABLE ─────────────────────── */
-  .err-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13.5px; }
-  .err-table th { padding: 9px 14px; text-align: left; font-size: 11px; font-family: var(--mono); color: var(--muted); border-bottom: 2px solid var(--border); font-weight: 500; background: var(--bg); letter-spacing: 0.06em; text-transform: uppercase; }
-  .err-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
-  .err-table tr:last-child td { border-bottom: none; }
-  .err-table tr:hover td { background: var(--bg); }
-  .err-code  { font-family: var(--mono); font-size: 12px; font-weight: 500; }
-  .err-code.red  { color: var(--red);  }
-  .err-code.gold { color: var(--gold); }
+      /* ── ERROR TABLE ─────────────────────── */
+      .err-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+        font-size: 13.5px;
+      }
+      .err-table th {
+        padding: 9px 14px;
+        text-align: left;
+        font-size: 11px;
+        font-family: var(--mono);
+        color: var(--muted);
+        border-bottom: 2px solid var(--border);
+        font-weight: 500;
+        background: var(--bg);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .err-table td {
+        padding: 11px 14px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      .err-table tr:last-child td {
+        border-bottom: none;
+      }
+      .err-table tr:hover td {
+        background: var(--bg);
+      }
+      .err-code {
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .err-code.red {
+        color: var(--red);
+      }
+      .err-code.gold {
+        color: var(--gold);
+      }
 
-  /* ── SUMMARY ─────────────────────────── */
-  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 24px 0; }
-  .summary-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
-  .summary-item h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-  .summary-item p  { font-size: 13px; color: var(--muted); margin: 0; }
-  .summary-num { font-family: var(--mono); font-size: 24px; font-weight: 500; color: var(--gold); opacity: 0.4; line-height: 1; margin-bottom: 6px; }
+      /* ── SUMMARY ─────────────────────────── */
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+        margin: 24px 0;
+      }
+      .summary-item {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 20px;
+      }
+      .summary-item h4 {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .summary-item p {
+        font-size: 13px;
+        color: var(--muted);
+        margin: 0;
+      }
+      .summary-num {
+        font-family: var(--mono);
+        font-size: 24px;
+        font-weight: 500;
+        color: var(--gold);
+        opacity: 0.4;
+        line-height: 1;
+        margin-bottom: 6px;
+      }
 
-  footer { border-top: 1px solid var(--border); padding: 28px 2rem; text-align: center; }
-  footer p { font-size: 13px; color: var(--muted); }
-  footer strong { color: var(--gold); }
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 28px 2rem;
+        text-align: center;
+      }
+      footer p {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      footer strong {
+        color: var(--gold);
+      }
 
-  @media (max-width: 600px) {
-    nav .nav-links { display: none; }
-    .hero { padding: 90px 1.5rem 48px; }
-    .wrapper { padding: 0 1.5rem; }
-  }
-</style>
-</head>
-<body>
+      @media (max-width: 600px) {
+        nav .nav-links {
+          display: none;
+        }
+        .hero {
+          padding: 90px 1.5rem 48px;
+        }
+        .wrapper {
+          padding: 0 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="progress" id="progress"></div>
 
-<div class="progress" id="progress"></div>
+    <nav>
+      <div class="nav-brand"><em>⬡</em> Panduan Sesi 2 — Praktikum API</div>
+      <ul class="nav-links">
+        <li><a href="#persiapan">Persiapan</a></li>
+        <li><a href="#koneksi">Koneksi</a></li>
+        <li><a href="#tugas1">GET All</a></li>
+        <li><a href="#tugas2">POST</a></li>
+        <li><a href="#tugas3">GET One</a></li>
+        <li><a href="#tugas4">PUT</a></li>
+        <li><a href="#tugas5">DELETE</a></li>
+        <li><a href="#error">Troubleshoot</a></li>
+      </ul>
+    </nav>
 
-<nav>
-  <div class="nav-brand"><em>⬡</em> Panduan Sesi 2 — Praktikum API</div>
-  <ul class="nav-links">
-    <li><a href="#persiapan">Persiapan</a></li>
-    <li><a href="#koneksi">Koneksi</a></li>
-    <li><a href="#tugas1">GET All</a></li>
-    <li><a href="#tugas2">POST</a></li>
-    <li><a href="#tugas3">GET One</a></li>
-    <li><a href="#tugas4">PUT</a></li>
-    <li><a href="#tugas5">DELETE</a></li>
-    <li><a href="#error">Troubleshoot</a></li>
-  </ul>
-</nav>
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-pill">
+        <span class="hero-pill-dot"></span>Sesi 2 — Praktik Langsung
+      </div>
+      <h1>Panduan <span>Client</span> Mahasiswa</h1>
+      <p>
+        Kamu akan melengkapi 5 fungsi JavaScript untuk berkomunikasi dengan
+        server dosen menggunakan HTTP API.
+      </p>
+      <div class="checklist-hero">
+        <div class="check-pill">
+          <span class="num">01</span> Koneksi ke server
+        </div>
+        <div class="check-pill">
+          <span class="num">02</span> GET — ambil semua data
+        </div>
+        <div class="check-pill">
+          <span class="num">03</span> POST — kirim data diri
+        </div>
+        <div class="check-pill">
+          <span class="num">04</span> GET — cari by NPM
+        </div>
+        <div class="check-pill">
+          <span class="num">05</span> PUT — update data
+        </div>
+        <div class="check-pill">
+          <span class="num">06</span> DELETE — request hapus
+        </div>
+      </div>
+    </div>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-pill"><span class="hero-pill-dot"></span>Sesi 2 — Praktik Langsung</div>
-  <h1>Panduan <span>Client</span> Mahasiswa</h1>
-  <p>Kamu akan melengkapi 5 fungsi JavaScript untuk berkomunikasi dengan server dosen menggunakan HTTP API.</p>
-  <div class="checklist-hero">
-    <div class="check-pill"><span class="num">01</span> Koneksi ke server</div>
-    <div class="check-pill"><span class="num">02</span> GET — ambil semua data</div>
-    <div class="check-pill"><span class="num">03</span> POST — kirim data diri</div>
-    <div class="check-pill"><span class="num">04</span> GET — cari by NPM</div>
-    <div class="check-pill"><span class="num">05</span> PUT — update data</div>
-    <div class="check-pill"><span class="num">06</span> DELETE — request hapus</div>
-  </div>
-</div>
-
-<div class="wrapper">
-
-<!-- ══════════════════════════════════════════
+    <div class="wrapper">
+      <!-- ══════════════════════════════════════════
      PERSIAPAN
 ══════════════════════════════════════════ -->
-<section id="persiapan">
-  <div class="sec-tag">00 — Sebelum mulai</div>
-  <h2>Persiapan</h2>
+      <section id="persiapan">
+        <div class="sec-tag">00 — Sebelum mulai</div>
+        <h2>Persiapan</h2>
 
-  <div class="step-header">
-    <div class="step-num">1</div>
-    <div>
-      <div class="step-title">Buka file template</div>
-      <div class="step-sub">File yang dibagikan dosen: <code style="font-family:var(--mono);font-size:13px;background:rgba(27,43,58,0.08);padding:2px 6px;border-radius:4px">client-mahasiswa-template.html</code></div>
-    </div>
-  </div>
-  <div class="warn-box">
-    <div class="box-title">⚠️ Jangan buka file langsung dari folder</div>
-    File HTML yang melakukan fetch ke server lain <strong>harus dibuka via web server lokal</strong>, bukan double-click. Jika dibuka langsung, browser akan memblokir request karena alasan keamanan (<code style="font-family:var(--mono);font-size:12px">file://</code> origin).
-  </div>
+        <div class="step-header">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Buka file template</div>
+            <div class="step-sub">
+              File yang dibagikan dosen:
+              <code
+                style="
+                  font-family: var(--mono);
+                  font-size: 13px;
+                  background: rgba(27, 43, 58, 0.08);
+                  padding: 2px 6px;
+                  border-radius: 4px;
+                "
+                >client-mahasiswa-template.html</code
+              >
+            </div>
+          </div>
+        </div>
+        <div class="warn-box">
+          <div class="box-title">⚠️ Jangan buka file langsung dari folder</div>
+          File HTML yang melakukan fetch ke server lain
+          <strong>harus dibuka via web server lokal</strong>, bukan
+          double-click. Jika dibuka langsung, browser akan memblokir request
+          karena alasan keamanan (<code
+            style="font-family: var(--mono); font-size: 12px"
+            >file://</code
+          >
+          origin).
+        </div>
 
-  <div class="step-header">
-    <div class="step-num">2</div>
-    <div>
-      <div class="step-title">Buka via VS Code Live Server</div>
-      <div class="step-sub">Cara paling mudah tanpa install apapun</div>
-    </div>
-  </div>
-  <p>Install extension <strong>Live Server</strong> di VS Code (oleh Ritwick Dey), lalu klik kanan file HTML → <strong>Open with Live Server</strong>. File akan terbuka di browser dengan URL <code style="font-family:var(--mono);font-size:12px">http://127.0.0.1:5500/...</code> — ini sudah benar.</p>
+        <div class="step-header">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Buka via VS Code Live Server</div>
+            <div class="step-sub">Cara paling mudah tanpa install apapun</div>
+          </div>
+        </div>
+        <p>
+          Install extension <strong>Live Server</strong> di VS Code (oleh
+          Ritwick Dey), lalu klik kanan file HTML →
+          <strong>Open with Live Server</strong>. File akan terbuka di browser
+          dengan URL
+          <code style="font-family: var(--mono); font-size: 12px"
+            >http://127.0.0.1:5500/...</code
+          >
+          — ini sudah benar.
+        </p>
 
-  <div class="info-box">
-    <div class="box-title">💡 Alternatif jika tidak ada VS Code</div>
-    Buka terminal di folder file, jalankan: <code style="font-family:var(--mono);font-size:12px">python3 -m http.server 5500</code>, lalu buka <code style="font-family:var(--mono);font-size:12px">http://localhost:5500</code> di browser.
-  </div>
+        <div class="info-box">
+          <div class="box-title">💡 Alternatif jika tidak ada VS Code</div>
+          Buka terminal di folder file, jalankan:
+          <code style="font-family: var(--mono); font-size: 12px"
+            >python3 -m http.server 5500</code
+          >, lalu buka
+          <code style="font-family: var(--mono); font-size: 12px"
+            >http://localhost:5500</code
+          >
+          di browser.
+        </div>
 
-  <div class="step-header" style="margin-top:24px">
-    <div class="step-num">3</div>
-    <div>
-      <div class="step-title">Buka DevTools — tab Console</div>
-      <div class="step-sub">Wajib terbuka selama praktik untuk melihat error</div>
-    </div>
-  </div>
-  <p>Tekan <strong>F12</strong> (Windows) atau <strong>Cmd+Option+I</strong> (Mac) → pilih tab <strong>Console</strong>. Jika ada error JavaScript, akan muncul di sini dengan warna merah beserta nomor barisnya.</p>
-</section>
+        <div class="step-header" style="margin-top: 24px">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Buka DevTools — tab Console</div>
+            <div class="step-sub">
+              Wajib terbuka selama praktik untuk melihat error
+            </div>
+          </div>
+        </div>
+        <p>
+          Tekan <strong>F12</strong> (Windows) atau
+          <strong>Cmd+Option+I</strong> (Mac) → pilih tab
+          <strong>Console</strong>. Jika ada error JavaScript, akan muncul di
+          sini dengan warna merah beserta nomor barisnya.
+        </p>
+      </section>
 
-<!-- ══════════════════════════════════════════
+      <!-- ══════════════════════════════════════════
      KONEKSI
 ══════════════════════════════════════════ -->
-<section id="koneksi">
-  <div class="sec-tag">01 — Langkah pertama</div>
-  <h2>Koneksi ke Server Dosen</h2>
+      <section id="koneksi">
+        <div class="sec-tag">01 — Langkah pertama</div>
+        <h2>Koneksi ke Server Dosen</h2>
 
-  <p>Di bagian atas halaman ada dua input: <strong>IP</strong> dan <strong>Port</strong>. Isi dengan IP dan port yang diberikan dosen di kelas.</p>
+        <p>
+          Di bagian atas halaman ada dua input: <strong>IP</strong> dan
+          <strong>Port</strong>. Isi dengan IP dan port yang diberikan dosen di
+          kelas.
+        </p>
 
-  <div class="code-block">
-    <div class="code-head"><div class="code-dots"><span></span><span></span><span></span></div><div class="code-fname">contoh isian</div></div>
-    <pre>IP   : <span class="hl">192.168.1.10</span>
+        <div class="code-block">
+          <div class="code-head">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <div class="code-fname">contoh isian</div>
+          </div>
+          <pre>IP   : <span class="hl">192.168.1.10</span>
 Port : <span class="hl">3000</span>
 <span class="c">↓ preview otomatis terbentuk</span>
 URL  : http://192.168.1.10:3000</pre>
-  </div>
+        </div>
 
-  <p>Klik tombol <strong>Cek Koneksi</strong>. Kalau berhasil, indicator di pojok kanan atas akan berubah hijau dan muncul toast <em>"✓ Server terhubung"</em>.</p>
+        <p>
+          Klik tombol <strong>Cek Koneksi</strong>. Kalau berhasil, indicator di
+          pojok kanan atas akan berubah hijau dan muncul toast
+          <em>"✓ Server terhubung"</em>.
+        </p>
 
-  <div class="ok-box">
-    <div class="box-title">✓ IP dan Port tersimpan otomatis</div>
-    Tidak perlu isi ulang setiap reload halaman — sudah disimpan ke localStorage browser.
-  </div>
+        <div class="ok-box">
+          <div class="box-title">✓ IP dan Port tersimpan otomatis</div>
+          Tidak perlu isi ulang setiap reload halaman — sudah disimpan ke
+          localStorage browser.
+        </div>
 
-  <div class="warn-box">
-    <div class="box-title">⚠️ Kalau gagal terhubung</div>
-    Pastikan laptop kamu dan laptop dosen berada di <strong>jaringan WiFi yang sama</strong>. Jika beda jaringan, request tidak akan sampai ke server.
-  </div>
-</section>
+        <div class="warn-box">
+          <div class="box-title">⚠️ Kalau gagal terhubung</div>
+          Pastikan laptop kamu dan laptop dosen berada di
+          <strong>jaringan WiFi yang sama</strong>. Jika beda jaringan, request
+          tidak akan sampai ke server.
+        </div>
+      </section>
 
-<!-- ══════════════════════════════════════════
+      <!-- ══════════════════════════════════════════
      TUGAS 1 — GET ALL
 ══════════════════════════════════════════ -->
-<section id="tugas1">
-  <div class="sec-tag">02 — Tugas 1</div>
-  <h2>Fungsi <code style="font-size:1.4rem;font-family:var(--mono)">ambilSemua()</code></h2>
+      <section id="tugas1">
+        <div class="sec-tag">02 — Tugas 1</div>
+        <h2>
+          Fungsi
+          <code style="font-size: 1.4rem; font-family: var(--mono)"
+            >ambilSemua()</code
+          >
+        </h2>
 
-  <div class="step-header">
-    <div class="step-num gold">GET</div>
-    <div>
-      <div class="step-title">Ambil semua data mahasiswa dari server</div>
-      <div class="step-sub">Endpoint: GET /api/mahasiswa</div>
-    </div>
-  </div>
+        <div class="step-header">
+          <div class="step-num gold">GET</div>
+          <div>
+            <div class="step-title">Ambil semua data mahasiswa dari server</div>
+            <div class="step-sub">Endpoint: GET /api/mahasiswa</div>
+          </div>
+        </div>
 
-  <p>Fungsi ini dipanggil saat tombol <strong>↓ Ambil Data</strong> diklik. Tugasmu ada dua bagian: isi URL yang benar, lalu render datanya ke tabel.</p>
+        <p>
+          Fungsi ini dipanggil saat tombol <strong>↓ Ambil Data</strong> diklik.
+          Tugasmu ada dua bagian: isi URL yang benar, lalu render datanya ke
+          tabel.
+        </p>
 
-  <h3>Bagian 1 — Isi URL endpoint</h3>
-  <div class="diff">
-    <div class="diff-head"><span>ambilSemua() — baris URL</span><div style="display:flex;gap:6px"><span class="diff-tag before">sebelum</span><span class="diff-tag after">sesudah</span></div></div>
-    <pre><span class="del">const url = BASE_URL + '/api/...'   // ← GANTI INI</span>
+        <h3>Bagian 1 — Isi URL endpoint</h3>
+        <div class="diff">
+          <div class="diff-head">
+            <span>ambilSemua() — baris URL</span>
+            <div style="display: flex; gap: 6px">
+              <span class="diff-tag before">sebelum</span
+              ><span class="diff-tag after">sesudah</span>
+            </div>
+          </div>
+          <pre><span class="del">const url = BASE_URL + '/api/...'   // ← GANTI INI</span>
 <span class="add">const url = BASE_URL + '<span class="hl">/api/mahasiswa</span>'</span></pre>
-  </div>
+        </div>
 
-  <h3>Bagian 2 — Render data ke tabel</h3>
-  <p>Setelah <code style="font-family:var(--mono);font-size:13px">tbody.innerHTML = ''</code>, tambahkan kode berikut untuk mengisi tabel:</p>
+        <h3>Bagian 2 — Render data ke tabel</h3>
+        <p>
+          Setelah
+          <code style="font-family: var(--mono); font-size: 13px"
+            >tbody.innerHTML = ''</code
+          >, tambahkan kode berikut untuk mengisi tabel:
+        </p>
 
-  <div class="code-block">
-    <div class="code-head"><div class="code-dots"><span></span><span></span><span></span></div><div class="code-fname">ambilSemua() — render tabel</div><button class="copy-btn" onclick="salin(this)">copy</button></div>
-    <pre><span class="c">// Tambahkan di bawah: tbody.innerHTML = ''</span>
+        <div class="code-block">
+          <div class="code-head">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <div class="code-fname">ambilSemua() — render tabel</div>
+            <button class="copy-btn" onclick="salin(this)">copy</button>
+          </div>
+          <pre><span class="c">// Tambahkan di bawah: tbody.innerHTML = ''</span>
 
 <span class="k">if</span> (json.data.length === <span class="n">0</span>) {
   tbody.innerHTML = <span class="s">'&lt;tr&gt;&lt;td colspan="6" style="text-align:center;padding:32px;color:#7A8694"&gt;Belum ada data&lt;/td&gt;&lt;/tr&gt;'</span>
@@ -349,34 +871,52 @@ json.data.<span class="f">forEach</span>(m => {
   `</span>
   tbody.innerHTML += row
 })</pre>
-  </div>
+        </div>
 
-  <div class="tip-box">
-    <div class="box-title">🔍 Cara cek hasilnya</div>
-    Klik <strong>↓ Ambil Data</strong>. Kalau server masih kosong, tabel akan menampilkan "Belum ada data". Kalau ada data, muncul dalam baris-baris tabel. Toast "✓ N data berhasil dimuat" harus muncul di pojok kanan bawah.
-  </div>
-</section>
+        <div class="tip-box">
+          <div class="box-title">🔍 Cara cek hasilnya</div>
+          Klik <strong>↓ Ambil Data</strong>. Kalau server masih kosong, tabel
+          akan menampilkan "Belum ada data". Kalau ada data, muncul dalam
+          baris-baris tabel. Toast "✓ N data berhasil dimuat" harus muncul di
+          pojok kanan bawah.
+        </div>
+      </section>
 
-<!-- ══════════════════════════════════════════
+      <!-- ══════════════════════════════════════════
      TUGAS 2 — POST
 ══════════════════════════════════════════ -->
-<section id="tugas2">
-  <div class="sec-tag">03 — Tugas 2</div>
-  <h2>Fungsi <code style="font-size:1.4rem;font-family:var(--mono)">submitDaftar()</code></h2>
+      <section id="tugas2">
+        <div class="sec-tag">03 — Tugas 2</div>
+        <h2>
+          Fungsi
+          <code style="font-size: 1.4rem; font-family: var(--mono)"
+            >submitDaftar()</code
+          >
+        </h2>
 
-  <div class="step-header">
-    <div class="step-num gold">POST</div>
-    <div>
-      <div class="step-title">Kirim data diri ke server</div>
-      <div class="step-sub">Endpoint: POST /api/mahasiswa</div>
-    </div>
-  </div>
+        <div class="step-header">
+          <div class="step-num gold">POST</div>
+          <div>
+            <div class="step-title">Kirim data diri ke server</div>
+            <div class="step-sub">Endpoint: POST /api/mahasiswa</div>
+          </div>
+        </div>
 
-  <p>Fungsi ini dipanggil saat tombol <strong>Kirim Data</strong> diklik. Ada 3 baris yang harus diisi: URL endpoint, method, dan Content-Type header.</p>
+        <p>
+          Fungsi ini dipanggil saat tombol <strong>Kirim Data</strong> diklik.
+          Ada 3 baris yang harus diisi: URL endpoint, method, dan Content-Type
+          header.
+        </p>
 
-  <div class="diff">
-    <div class="diff-head"><span>submitDaftar() — 3 baris yang diganti</span><div style="display:flex;gap:6px"><span class="diff-tag before">sebelum</span><span class="diff-tag after">sesudah</span></div></div>
-    <pre><span class="del">const url = BASE_URL + '/api/...'   // ← GANTI INI</span>
+        <div class="diff">
+          <div class="diff-head">
+            <span>submitDaftar() — 3 baris yang diganti</span>
+            <div style="display: flex; gap: 6px">
+              <span class="diff-tag before">sebelum</span
+              ><span class="diff-tag after">sesudah</span>
+            </div>
+          </div>
+          <pre><span class="del">const url = BASE_URL + '/api/...'   // ← GANTI INI</span>
 <span class="add">const url = BASE_URL + '<span class="hl">/api/mahasiswa</span>'</span>
 
 <span class="k">const</span> res = <span class="k">await</span> <span class="f">fetch</span>(url, {
@@ -386,76 +926,141 @@ json.data.<span class="f">forEach</span>(m => {
   <span class="add">headers: { 'Content-Type': <span class="hl">'application/json'</span> },</span>
   body: <span class="f">JSON.stringify</span>({ npm, nama, prodi, kelas, pesan }) <span class="c">// sudah ada</span>
 })</pre>
-  </div>
+        </div>
 
-  <div class="info-box">
-    <div class="box-title">ℹ️ Kenapa harus ada Content-Type?</div>
-    Header <code style="font-family:var(--mono);font-size:12px">Content-Type: application/json</code> memberitahu server bahwa data yang kamu kirim adalah JSON. Tanpa ini, server tidak tahu cara membaca body request dan akan merespons error 422.
-  </div>
+        <div class="info-box">
+          <div class="box-title">ℹ️ Kenapa harus ada Content-Type?</div>
+          Header
+          <code style="font-family: var(--mono); font-size: 12px"
+            >Content-Type: application/json</code
+          >
+          memberitahu server bahwa data yang kamu kirim adalah JSON. Tanpa ini,
+          server tidak tahu cara membaca body request dan akan merespons error
+          422.
+        </div>
 
-  <div class="tip-box">
-    <div class="box-title">🔍 Cara cek hasilnya</div>
-    Isi form NPM, Nama, Prodi, Kelas, lalu klik <strong>Kirim Data</strong>. Response box di bawah tombol akan menampilkan <code style="font-family:var(--mono);font-size:12px">HTTP 201</code> dan data yang tersimpan. Tabel semua data otomatis ter-refresh. Kalau NPM yang sama dikirim dua kali → muncul <code style="font-family:var(--mono);font-size:12px">HTTP 409</code> (konflik).
-  </div>
-</section>
+        <div class="tip-box">
+          <div class="box-title">🔍 Cara cek hasilnya</div>
+          Isi form NPM, Nama, Prodi, Kelas, lalu klik
+          <strong>Kirim Data</strong>. Response box di bawah tombol akan
+          menampilkan
+          <code style="font-family: var(--mono); font-size: 12px"
+            >HTTP 201</code
+          >
+          dan data yang tersimpan. Tabel semua data otomatis ter-refresh. Kalau
+          NPM yang sama dikirim dua kali → muncul
+          <code style="font-family: var(--mono); font-size: 12px"
+            >HTTP 409</code
+          >
+          (konflik).
+        </div>
+      </section>
 
-<!-- ══════════════════════════════════════════
+      <!-- ══════════════════════════════════════════
      TUGAS 3 — GET ONE
 ══════════════════════════════════════════ -->
-<section id="tugas3">
-  <div class="sec-tag">04 — Tugas 3</div>
-  <h2>Fungsi <code style="font-size:1.4rem;font-family:var(--mono)">cariByNpm()</code></h2>
+      <section id="tugas3">
+        <div class="sec-tag">04 — Tugas 3</div>
+        <h2>
+          Fungsi
+          <code style="font-size: 1.4rem; font-family: var(--mono)"
+            >cariByNpm()</code
+          >
+        </h2>
 
-  <div class="step-header">
-    <div class="step-num gold">GET</div>
-    <div>
-      <div class="step-title">Cari satu mahasiswa berdasarkan NPM</div>
-      <div class="step-sub">Endpoint: GET /api/mahasiswa/:npm</div>
-    </div>
-  </div>
+        <div class="step-header">
+          <div class="step-num gold">GET</div>
+          <div>
+            <div class="step-title">Cari satu mahasiswa berdasarkan NPM</div>
+            <div class="step-sub">Endpoint: GET /api/mahasiswa/:npm</div>
+          </div>
+        </div>
 
-  <p>Fungsi ini menggunakan <strong>path parameter</strong> — NPM dimasukkan langsung ke dalam URL, bukan di body.</p>
+        <p>
+          Fungsi ini menggunakan <strong>path parameter</strong> — NPM
+          dimasukkan langsung ke dalam URL, bukan di body.
+        </p>
 
-  <div class="diff">
-    <div class="diff-head"><span>cariByNpm() — susun URL dengan path parameter</span><div style="display:flex;gap:6px"><span class="diff-tag before">sebelum</span><span class="diff-tag after">sesudah</span></div></div>
-    <pre><span class="del">const url = BASE_URL + '/api/...' + npm  // ← GANTI INI</span>
+        <div class="diff">
+          <div class="diff-head">
+            <span>cariByNpm() — susun URL dengan path parameter</span>
+            <div style="display: flex; gap: 6px">
+              <span class="diff-tag before">sebelum</span
+              ><span class="diff-tag after">sesudah</span>
+            </div>
+          </div>
+          <pre><span class="del">const url = BASE_URL + '/api/...' + npm  // ← GANTI INI</span>
 <span class="add">const url = BASE_URL + <span class="hl">'/api/mahasiswa/'</span> + npm</span>
 
 <span class="c">// contoh hasil URL jika npm = '624C0004':</span>
 <span class="c">// http://192.168.1.10:3000/api/mahasiswa/624C0004</span></pre>
-  </div>
+        </div>
 
-  <div class="warn-box">
-    <div class="box-title">⚠️ Jangan lupa slash sebelum npm</div>
-    <code style="font-family:var(--mono);font-size:12px">'/api/mahasiswa/'</code> — ada <strong>garis miring di akhir</strong> sebelum ditambah <code style="font-family:var(--mono);font-size:12px">npm</code>. Kalau tidak ada, URL jadi <code style="font-family:var(--mono);font-size:12px">/api/mahasiswa624C0004</code> yang tidak valid.
-  </div>
+        <div class="warn-box">
+          <div class="box-title">⚠️ Jangan lupa slash sebelum npm</div>
+          <code style="font-family: var(--mono); font-size: 12px"
+            >'/api/mahasiswa/'</code
+          >
+          — ada <strong>garis miring di akhir</strong> sebelum ditambah
+          <code style="font-family: var(--mono); font-size: 12px">npm</code>.
+          Kalau tidak ada, URL jadi
+          <code style="font-family: var(--mono); font-size: 12px"
+            >/api/mahasiswa624C0004</code
+          >
+          yang tidak valid.
+        </div>
 
-  <div class="tip-box">
-    <div class="box-title">🔍 Cara cek hasilnya</div>
-    Isi NPM yang sudah terdaftar (misal NPM kamu sendiri setelah POST), klik <strong>Cari</strong>. Response box menampilkan <code style="font-family:var(--mono);font-size:12px">HTTP 200</code> dan satu data mahasiswa. Coba NPM yang tidak ada → muncul <code style="font-family:var(--mono);font-size:12px">HTTP 404</code>.
-  </div>
-</section>
+        <div class="tip-box">
+          <div class="box-title">🔍 Cara cek hasilnya</div>
+          Isi NPM yang sudah terdaftar (misal NPM kamu sendiri setelah POST),
+          klik <strong>Cari</strong>. Response box menampilkan
+          <code style="font-family: var(--mono); font-size: 12px"
+            >HTTP 200</code
+          >
+          dan satu data mahasiswa. Coba NPM yang tidak ada → muncul
+          <code style="font-family: var(--mono); font-size: 12px">HTTP 404</code
+          >.
+        </div>
+      </section>
 
-<!-- ══════════════════════════════════════════
+      <!-- ══════════════════════════════════════════
      TUGAS 4 — PUT
 ══════════════════════════════════════════ -->
-<section id="tugas4">
-  <div class="sec-tag">05 — Tugas 4</div>
-  <h2>Fungsi <code style="font-size:1.4rem;font-family:var(--mono)">updateData()</code></h2>
+      <section id="tugas4">
+        <div class="sec-tag">05 — Tugas 4</div>
+        <h2>
+          Fungsi
+          <code style="font-size: 1.4rem; font-family: var(--mono)"
+            >updateData()</code
+          >
+        </h2>
 
-  <div class="step-header">
-    <div class="step-num gold">PUT</div>
-    <div>
-      <div class="step-title">Update data mahasiswa yang sudah ada</div>
-      <div class="step-sub">Endpoint: PUT /api/mahasiswa/:npm</div>
-    </div>
-  </div>
+        <div class="step-header">
+          <div class="step-num gold">PUT</div>
+          <div>
+            <div class="step-title">Update data mahasiswa yang sudah ada</div>
+            <div class="step-sub">Endpoint: PUT /api/mahasiswa/:npm</div>
+          </div>
+        </div>
 
-  <p>Sama seperti GET One, URL menggunakan path parameter. Bedanya kali ini ada <code style="font-family:var(--mono);font-size:13px">method: 'PUT'</code> dan body berisi field yang ingin diubah.</p>
+        <p>
+          Sama seperti GET One, URL menggunakan path parameter. Bedanya kali ini
+          ada
+          <code style="font-family: var(--mono); font-size: 13px"
+            >method: 'PUT'</code
+          >
+          dan body berisi field yang ingin diubah.
+        </p>
 
-  <div class="diff">
-    <div class="diff-head"><span>updateData() — 3 baris yang diganti</span><div style="display:flex;gap:6px"><span class="diff-tag before">sebelum</span><span class="diff-tag after">sesudah</span></div></div>
-    <pre><span class="del">const url = BASE_URL + '/api/...' + npm  // ← GANTI INI</span>
+        <div class="diff">
+          <div class="diff-head">
+            <span>updateData() — 3 baris yang diganti</span>
+            <div style="display: flex; gap: 6px">
+              <span class="diff-tag before">sebelum</span
+              ><span class="diff-tag after">sesudah</span>
+            </div>
+          </div>
+          <pre><span class="del">const url = BASE_URL + '/api/...' + npm  // ← GANTI INI</span>
 <span class="add">const url = BASE_URL + <span class="hl">'/api/mahasiswa/'</span> + npm</span>
 
 <span class="k">const</span> res = <span class="k">await</span> <span class="f">fetch</span>(url, {
@@ -465,39 +1070,62 @@ json.data.<span class="f">forEach</span>(m => {
   <span class="add">headers: { 'Content-Type': <span class="hl">'application/json'</span> },</span>
   body: <span class="f">JSON.stringify</span>(body) <span class="c">// sudah disiapkan otomatis</span>
 })</pre>
-  </div>
+        </div>
 
-  <div class="ok-box">
-    <div class="box-title">✓ Tidak perlu isi semua field</div>
-    Kode sudah otomatis hanya mengirim field yang kamu isi. Kalau hanya mau ubah pesan, cukup isi NPM dan field Pesan Baru — field lain dikosongkan.
-  </div>
+        <div class="ok-box">
+          <div class="box-title">✓ Tidak perlu isi semua field</div>
+          Kode sudah otomatis hanya mengirim field yang kamu isi. Kalau hanya
+          mau ubah pesan, cukup isi NPM dan field Pesan Baru — field lain
+          dikosongkan.
+        </div>
 
-  <div class="tip-box">
-    <div class="box-title">🔍 Cara cek hasilnya</div>
-    Isi NPM datamu, ubah salah satu field (misal ubah Pesan), klik <strong>Update Data</strong>. Response box menampilkan <code style="font-family:var(--mono);font-size:12px">HTTP 200</code> dan data terbaru. Tabel otomatis refresh — cek kolom yang kamu ubah sudah berubah.
-  </div>
-</section>
+        <div class="tip-box">
+          <div class="box-title">🔍 Cara cek hasilnya</div>
+          Isi NPM datamu, ubah salah satu field (misal ubah Pesan), klik
+          <strong>Update Data</strong>. Response box menampilkan
+          <code style="font-family: var(--mono); font-size: 12px"
+            >HTTP 200</code
+          >
+          dan data terbaru. Tabel otomatis refresh — cek kolom yang kamu ubah
+          sudah berubah.
+        </div>
+      </section>
 
-<!-- ══════════════════════════════════════════
+      <!-- ══════════════════════════════════════════
      TUGAS 5 — DELETE
 ══════════════════════════════════════════ -->
-<section id="tugas5">
-  <div class="sec-tag">06 — Tugas 5</div>
-  <h2>Fungsi <code style="font-size:1.4rem;font-family:var(--mono)">requestHapus()</code></h2>
+      <section id="tugas5">
+        <div class="sec-tag">06 — Tugas 5</div>
+        <h2>
+          Fungsi
+          <code style="font-size: 1.4rem; font-family: var(--mono)"
+            >requestHapus()</code
+          >
+        </h2>
 
-  <div class="step-header">
-    <div class="step-num gold">DEL</div>
-    <div>
-      <div class="step-title">Kirim permintaan hapus data</div>
-      <div class="step-sub">Endpoint: DELETE /api/mahasiswa/:npm</div>
-    </div>
-  </div>
+        <div class="step-header">
+          <div class="step-num gold">DEL</div>
+          <div>
+            <div class="step-title">Kirim permintaan hapus data</div>
+            <div class="step-sub">Endpoint: DELETE /api/mahasiswa/:npm</div>
+          </div>
+        </div>
 
-  <p>Method DELETE tidak membutuhkan body. Cukup URL dengan path parameter dan method yang benar. Data <strong>tidak langsung terhapus</strong> — masuk ke antrian pending dan menunggu persetujuan dosen.</p>
+        <p>
+          Method DELETE tidak membutuhkan body. Cukup URL dengan path parameter
+          dan method yang benar. Data <strong>tidak langsung terhapus</strong> —
+          masuk ke antrian pending dan menunggu persetujuan dosen.
+        </p>
 
-  <div class="diff">
-    <div class="diff-head"><span>requestHapus() — 2 baris yang diganti</span><div style="display:flex;gap:6px"><span class="diff-tag before">sebelum</span><span class="diff-tag after">sesudah</span></div></div>
-    <pre><span class="del">const url = BASE_URL + '/api/...' + npm  // ← GANTI INI</span>
+        <div class="diff">
+          <div class="diff-head">
+            <span>requestHapus() — 2 baris yang diganti</span>
+            <div style="display: flex; gap: 6px">
+              <span class="diff-tag before">sebelum</span
+              ><span class="diff-tag after">sesudah</span>
+            </div>
+          </div>
+          <pre><span class="del">const url = BASE_URL + '/api/...' + npm  // ← GANTI INI</span>
 <span class="add">const url = BASE_URL + <span class="hl">'/api/mahasiswa/'</span> + npm</span>
 
 <span class="k">const</span> res = <span class="k">await</span> <span class="f">fetch</span>(url, {
@@ -505,86 +1133,138 @@ json.data.<span class="f">forEach</span>(m => {
   <span class="add">method: <span class="hl">'DELETE'</span></span>
 })
 <span class="c">// tidak ada body — DELETE hanya butuh URL dan method</span></pre>
-  </div>
+        </div>
 
-  <div class="tip-box">
-    <div class="box-title">🔍 Cara cek hasilnya</div>
-    Isi NPM datamu, klik <strong>Request Hapus</strong>. Response box menampilkan status <code style="font-family:var(--mono);font-size:12px">pending</code> dan pesan "menunggu persetujuan dosen". Toast kuning muncul. Data di tabel masih ada dengan status berubah jadi <code style="font-family:var(--mono);font-size:12px">pending delete</code>. Dosen yang akan approve atau reject dari panel admin mereka.
-  </div>
-</section>
+        <div class="tip-box">
+          <div class="box-title">🔍 Cara cek hasilnya</div>
+          Isi NPM datamu, klik <strong>Request Hapus</strong>. Response box
+          menampilkan status
+          <code style="font-family: var(--mono); font-size: 12px">pending</code>
+          dan pesan "menunggu persetujuan dosen". Toast kuning muncul. Data di
+          tabel masih ada dengan status berubah jadi
+          <code style="font-family: var(--mono); font-size: 12px"
+            >pending delete</code
+          >. Dosen yang akan approve atau reject dari panel admin mereka.
+        </div>
+      </section>
 
-<!-- ══════════════════════════════════════════
+      <!-- ══════════════════════════════════════════
      TROUBLESHOOT
 ══════════════════════════════════════════ -->
-<section id="error">
-  <div class="sec-tag">07 — Kalau ada masalah</div>
-  <h2>Troubleshoot Error</h2>
+      <section id="error">
+        <div class="sec-tag">07 — Kalau ada masalah</div>
+        <h2>Troubleshoot Error</h2>
 
-  <table class="err-table">
-    <thead>
-      <tr><th>Error / Gejala</th><th>Penyebab</th><th>Solusi</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="err-code red">CORS policy blocked</span></td>
-        <td>File dibuka via <code style="font-family:var(--mono);font-size:12px">file://</code> bukan server lokal</td>
-        <td>Buka via VS Code Live Server atau <code style="font-family:var(--mono);font-size:12px">python3 -m http.server</code></td>
-      </tr>
-      <tr>
-        <td><span class="err-code red">Failed to fetch / ERR_FAILED</span></td>
-        <td>IP atau Port salah, atau beda jaringan WiFi</td>
-        <td>Minta IP terbaru dari dosen, pastikan WiFi sama</td>
-      </tr>
-      <tr>
-        <td><span class="err-code gold">HTTP 404</span></td>
-        <td>URL endpoint salah atau NPM tidak ditemukan</td>
-        <td>Cek penulisan <code style="font-family:var(--mono);font-size:12px">/api/mahasiswa/</code> — pastikan ada slash sebelum NPM</td>
-      </tr>
-      <tr>
-        <td><span class="err-code gold">HTTP 409</span></td>
-        <td>NPM sudah terdaftar atau sudah pending hapus</td>
-        <td>Gunakan NPM yang belum pernah didaftarkan</td>
-      </tr>
-      <tr>
-        <td><span class="err-code gold">HTTP 422</span></td>
-        <td>Format data salah — tipe atau panjang field tidak sesuai</td>
-        <td>Cek NPM maks 10 karakter, Nama min 2 karakter</td>
-      </tr>
-      <tr>
-        <td><span class="err-code red">HTTP 500</span></td>
-        <td>Error di sisi server dosen</td>
-        <td>Hubungi dosen, bukan salah kamu</td>
-      </tr>
-      <tr>
-        <td>Tabel tidak tampil meski ambil data berhasil</td>
-        <td>Kode render tabel belum ditambahkan</td>
-        <td>Pastikan kode <code style="font-family:var(--mono);font-size:12px">json.data.forEach(...)</code> sudah ada di fungsi <code style="font-family:var(--mono);font-size:12px">ambilSemua()</code></td>
-      </tr>
-      <tr>
-        <td>Toast tidak muncul saat klik tombol</td>
-        <td>Ada syntax error di JavaScript</td>
-        <td>Buka Console (F12), cari baris merah, perbaiki typo di sana</td>
-      </tr>
-    </tbody>
-  </table>
+        <table class="err-table">
+          <thead>
+            <tr>
+              <th>Error / Gejala</th>
+              <th>Penyebab</th>
+              <th>Solusi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="err-code red">CORS policy blocked</span></td>
+              <td>
+                File dibuka via
+                <code style="font-family: var(--mono); font-size: 12px"
+                  >file://</code
+                >
+                bukan server lokal
+              </td>
+              <td>
+                Buka via VS Code Live Server atau
+                <code style="font-family: var(--mono); font-size: 12px"
+                  >python3 -m http.server</code
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="err-code red">Failed to fetch / ERR_FAILED</span>
+              </td>
+              <td>IP atau Port salah, atau beda jaringan WiFi</td>
+              <td>Minta IP terbaru dari dosen, pastikan WiFi sama</td>
+            </tr>
+            <tr>
+              <td><span class="err-code gold">HTTP 404</span></td>
+              <td>URL endpoint salah atau NPM tidak ditemukan</td>
+              <td>
+                Cek penulisan
+                <code style="font-family: var(--mono); font-size: 12px"
+                  >/api/mahasiswa/</code
+                >
+                — pastikan ada slash sebelum NPM
+              </td>
+            </tr>
+            <tr>
+              <td><span class="err-code gold">HTTP 409</span></td>
+              <td>NPM sudah terdaftar atau sudah pending hapus</td>
+              <td>Gunakan NPM yang belum pernah didaftarkan</td>
+            </tr>
+            <tr>
+              <td><span class="err-code gold">HTTP 422</span></td>
+              <td>Format data salah — tipe atau panjang field tidak sesuai</td>
+              <td>Cek NPM maks 10 karakter, Nama min 2 karakter</td>
+            </tr>
+            <tr>
+              <td><span class="err-code red">HTTP 500</span></td>
+              <td>Error di sisi server dosen</td>
+              <td>Hubungi dosen, bukan salah kamu</td>
+            </tr>
+            <tr>
+              <td>Tabel tidak tampil meski ambil data berhasil</td>
+              <td>Kode render tabel belum ditambahkan</td>
+              <td>
+                Pastikan kode
+                <code style="font-family: var(--mono); font-size: 12px"
+                  >json.data.forEach(...)</code
+                >
+                sudah ada di fungsi
+                <code style="font-family: var(--mono); font-size: 12px"
+                  >ambilSemua()</code
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>Toast tidak muncul saat klik tombol</td>
+              <td>Ada syntax error di JavaScript</td>
+              <td>
+                Buka Console (F12), cari baris merah, perbaiki typo di sana
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-  <div class="warn-box" style="margin-top:20px">
-    <div class="box-title">💡 Langkah debug universal</div>
-    Setiap kali ada error yang tidak jelas: <strong>1)</strong> Buka Console → baca pesan error → cari nomor barisnya. <strong>2)</strong> Buka tab <strong>Network</strong> di DevTools → klik request yang gagal → lihat tab Response untuk melihat pesan error dari server.
-  </div>
-</section>
+        <div class="warn-box" style="margin-top: 20px">
+          <div class="box-title">💡 Langkah debug universal</div>
+          Setiap kali ada error yang tidak jelas: <strong>1)</strong> Buka
+          Console → baca pesan error → cari nomor barisnya.
+          <strong>2)</strong> Buka tab <strong>Network</strong> di DevTools →
+          klik request yang gagal → lihat tab Response untuk melihat pesan error
+          dari server.
+        </div>
+      </section>
 
-<!-- ══════════════════════════════════════════
+      <!-- ══════════════════════════════════════════
      RINGKASAN
 ══════════════════════════════════════════ -->
-<section id="ringkasan">
-  <div class="sec-tag">08 — Rangkuman jawaban</div>
-  <h2>Ringkasan Semua Jawaban</h2>
-  <p>Berikut semua yang perlu diubah — satu pandangan untuk verifikasi sebelum kumpul.</p>
+      <section id="ringkasan">
+        <div class="sec-tag">08 — Rangkuman jawaban</div>
+        <h2>Ringkasan Semua Jawaban</h2>
+        <p>
+          Berikut semua yang perlu diubah — satu pandangan untuk verifikasi
+          sebelum kumpul.
+        </p>
 
-  <div class="code-block">
-    <div class="code-head"><div class="code-dots"><span></span><span></span><span></span></div><div class="code-fname">semua jawaban — referensi cepat</div><button class="copy-btn" onclick="salin(this)">copy</button></div>
-    <pre><span class="c">// ── 1. ambilSemua() ───────────────────────────</span>
+        <div class="code-block">
+          <div class="code-head">
+            <div class="code-dots"><span></span><span></span><span></span></div>
+            <div class="code-fname">semua jawaban — referensi cepat</div>
+            <button class="copy-btn" onclick="salin(this)">copy</button>
+          </div>
+          <pre><span class="c">// ── 1. ambilSemua() ───────────────────────────</span>
 <span class="k">const</span> url = BASE_URL + <span class="hl">'/api/mahasiswa'</span>
 
 <span class="c">// render tabel (tambah setelah tbody.innerHTML = '')</span>
@@ -616,80 +1296,101 @@ method:          <span class="hl">'PUT'</span>
 <span class="c">// ── 5. requestHapus() ─────────────────────────</span>
 <span class="k">const</span> url = BASE_URL + <span class="hl">'/api/mahasiswa/'</span> + npm
 method:       <span class="hl">'DELETE'</span></pre>
-  </div>
+        </div>
 
-  <div class="summary-grid">
-    <div class="summary-item">
-      <div class="summary-num">01</div>
-      <h4>ambilSemua</h4>
-      <p>GET /api/mahasiswa — isi URL + render forEach ke tbody</p>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <div class="summary-num">01</div>
+            <h4>ambilSemua</h4>
+            <p>GET /api/mahasiswa — isi URL + render forEach ke tbody</p>
+          </div>
+          <div class="summary-item">
+            <div class="summary-num">02</div>
+            <h4>submitDaftar</h4>
+            <p>POST /api/mahasiswa — isi URL, method POST, Content-Type JSON</p>
+          </div>
+          <div class="summary-item">
+            <div class="summary-num">03</div>
+            <h4>cariByNpm</h4>
+            <p>GET /api/mahasiswa/:npm — susun URL dengan path param</p>
+          </div>
+          <div class="summary-item">
+            <div class="summary-num">04</div>
+            <h4>updateData</h4>
+            <p>
+              PUT /api/mahasiswa/:npm — isi URL, method PUT, Content-Type JSON
+            </p>
+          </div>
+          <div class="summary-item">
+            <div class="summary-num">05</div>
+            <h4>requestHapus</h4>
+            <p>
+              DELETE /api/mahasiswa/:npm — isi URL + method DELETE, tanpa body
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
-    <div class="summary-item">
-      <div class="summary-num">02</div>
-      <h4>submitDaftar</h4>
-      <p>POST /api/mahasiswa — isi URL, method POST, Content-Type JSON</p>
-    </div>
-    <div class="summary-item">
-      <div class="summary-num">03</div>
-      <h4>cariByNpm</h4>
-      <p>GET /api/mahasiswa/:npm — susun URL dengan path param</p>
-    </div>
-    <div class="summary-item">
-      <div class="summary-num">04</div>
-      <h4>updateData</h4>
-      <p>PUT /api/mahasiswa/:npm — isi URL, method PUT, Content-Type JSON</p>
-    </div>
-    <div class="summary-item">
-      <div class="summary-num">05</div>
-      <h4>requestHapus</h4>
-      <p>DELETE /api/mahasiswa/:npm — isi URL + method DELETE, tanpa body</p>
-    </div>
-  </div>
-</section>
+    <!-- /wrapper -->
 
-</div><!-- /wrapper -->
+    <footer>
+      <p>
+        Panduan Sesi 2 — Praktikum API &nbsp;·&nbsp;
+        <strong>Institut Mahardika</strong>
+      </p>
+    </footer>
 
-<footer>
-  <p>Panduan Sesi 2 — Praktikum API &nbsp;·&nbsp; <strong>Institut Mahardika</strong></p>
-</footer>
+    <script>
+      // progress bar
+      window.addEventListener("scroll", () => {
+        const pct =
+          (window.scrollY / (document.body.scrollHeight - window.innerHeight)) *
+          100;
+        document.getElementById("progress").style.width = pct + "%";
+      });
 
-<script>
-  // progress bar
-  window.addEventListener('scroll', () => {
-    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100
-    document.getElementById('progress').style.width = pct + '%'
-  })
+      // active nav
+      const secs = document.querySelectorAll("section[id]");
+      const links = document.querySelectorAll(".nav-links a");
+      new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              links.forEach((a) => a.classList.remove("active"));
+              const a = document.querySelector(
+                `.nav-links a[href="#${e.target.id}"]`,
+              );
+              if (a) a.classList.add("active");
+            }
+          });
+        },
+        { rootMargin: "-40% 0px -55% 0px" },
+      ).observe;
+      secs.forEach((s) =>
+        new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                links.forEach((a) => a.classList.remove("active"));
+                const a = document.querySelector(
+                  `.nav-links a[href="#${e.target.id}"]`,
+                );
+                if (a) a.classList.add("active");
+              }
+            });
+          },
+          { rootMargin: "-40% 0px -55% 0px" },
+        ).observe(s),
+      );
 
-  // active nav
-  const secs = document.querySelectorAll('section[id]')
-  const links = document.querySelectorAll('.nav-links a')
-  new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        links.forEach(a => a.classList.remove('active'))
-        const a = document.querySelector(`.nav-links a[href="#${e.target.id}"]`)
-        if (a) a.classList.add('active')
+      // copy button
+      function salin(btn) {
+        const pre = btn.closest(".code-block").querySelector("pre");
+        navigator.clipboard.writeText(pre.innerText).then(() => {
+          btn.textContent = "copied!";
+          setTimeout(() => (btn.textContent = "copy"), 2000);
+        });
       }
-    })
-  }, { rootMargin: '-40% 0px -55% 0px' }).observe
-  secs.forEach(s => new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        links.forEach(a => a.classList.remove('active'))
-        const a = document.querySelector(`.nav-links a[href="#${e.target.id}"]`)
-        if (a) a.classList.add('active')
-      }
-    })
-  }, { rootMargin: '-40% 0px -55% 0px' }).observe(s))
-
-  // copy button
-  function salin(btn) {
-    const pre = btn.closest('.code-block').querySelector('pre')
-    navigator.clipboard.writeText(pre.innerText).then(() => {
-      btn.textContent = 'copied!'
-      setTimeout(() => btn.textContent = 'copy', 2000)
-    })
-  }
-</script>
-</body>
+    </script>
+  </body>
 </html>

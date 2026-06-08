@@ -1,744 +1,1569 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panduan Postman — Praktikum API</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg:      #F5F3EE;
-    --card:    #FFFFFF;
-    --navy:    #1B2B3A;
-    --orange:  #EF6C22;
-    --orange-bg: #FFF3EC;
-    --gold:    #D4841A;
-    --gold-bg: #FFF8EE;
-    --teal:    #1A7B6E;
-    --teal-bg: #EAF5F3;
-    --red:     #C0392B;
-    --red-bg:  #FEF0EE;
-    --blue:    #1E5FA8;
-    --blue-bg: #EEF4FC;
-    --border:  #E2DDD6;
-    --text:    #1B2B3A;
-    --muted:   #7A8694;
-    --mono:    'Fira Code', monospace;
-    --sans:    'Plus Jakarta Sans', sans-serif;
-  }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panduan Postman — Praktikum API</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --bg: #f5f3ee;
+        --card: #ffffff;
+        --navy: #1b2b3a;
+        --orange: #ef6c22;
+        --orange-bg: #fff3ec;
+        --gold: #d4841a;
+        --gold-bg: #fff8ee;
+        --teal: #1a7b6e;
+        --teal-bg: #eaf5f3;
+        --red: #c0392b;
+        --red-bg: #fef0ee;
+        --blue: #1e5fa8;
+        --blue-bg: #eef4fc;
+        --border: #e2ddd6;
+        --text: #1b2b3a;
+        --muted: #7a8694;
+        --mono: "Fira Code", monospace;
+        --sans: "Plus Jakarta Sans", sans-serif;
+      }
 
-  html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.7; }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+        font-size: 15px;
+        line-height: 1.7;
+      }
 
-  /* ── NAV ─────────────────────────────── */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(27,43,58,0.97); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 54px; }
-  .nav-brand { font-weight: 800; font-size: 14px; color: white; }
-  .nav-brand em { font-style: normal; color: #EF6C22; }
-  .nav-links { display: flex; list-style: none; }
-  .nav-links a { display: block; padding: 0 11px; height: 54px; line-height: 54px; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; white-space: nowrap; }
-  .nav-links a:hover { color: white; }
-  .nav-links a.active { color: #EF6C22; border-bottom: 2px solid #EF6C22; }
-  .progress { position: fixed; top: 54px; left: 0; height: 2px; background: var(--orange); z-index: 99; transition: width 0.1s; width: 0; }
+      /* ── NAV ─────────────────────────────── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: rgba(27, 43, 58, 0.97);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2rem;
+        height: 54px;
+      }
+      .nav-brand {
+        font-weight: 800;
+        font-size: 14px;
+        color: white;
+      }
+      .nav-brand em {
+        font-style: normal;
+        color: #ef6c22;
+      }
+      .nav-links {
+        display: flex;
+        list-style: none;
+      }
+      .nav-links a {
+        display: block;
+        padding: 0 11px;
+        height: 54px;
+        line-height: 54px;
+        font-size: 12px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.5);
+        text-decoration: none;
+        transition: color 0.2s;
+        white-space: nowrap;
+      }
+      .nav-links a:hover {
+        color: white;
+      }
+      .nav-links a.active {
+        color: #ef6c22;
+        border-bottom: 2px solid #ef6c22;
+      }
+      .progress {
+        position: fixed;
+        top: 54px;
+        left: 0;
+        height: 2px;
+        background: var(--orange);
+        z-index: 99;
+        transition: width 0.1s;
+        width: 0;
+      }
 
-  /* ── HERO ────────────────────────────── */
-  .hero { background: linear-gradient(135deg, #1B2B3A 0%, #2D3E50 100%); padding: 110px 2rem 60px; text-align: center; }
-  .postman-logo { display: inline-flex; align-items: center; gap: 10px; background: rgba(239,108,34,0.12); border: 1px solid rgba(239,108,34,0.3); border-radius: 100px; padding: 6px 18px; margin-bottom: 24px; }
-  .postman-logo span { font-size: 20px; }
-  .postman-logo strong { font-size: 13px; color: #EF6C22; font-weight: 600; }
-  .hero h1 { font-size: clamp(1.8rem,5vw,3rem); font-weight: 800; color: white; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 14px; }
-  .hero h1 em { font-style: normal; color: #EF6C22; }
-  .hero p { color: rgba(255,255,255,0.55); font-size: 1rem; max-width: 500px; margin: 0 auto 36px; }
-  .hero-steps { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-  .hero-step { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; padding: 6px 14px; font-size: 12px; color: rgba(255,255,255,0.7); }
-  .hero-step .n { font-family: var(--mono); color: #EF6C22; font-size: 11px; }
+      /* ── HERO ────────────────────────────── */
+      .hero {
+        background: linear-gradient(135deg, #1b2b3a 0%, #2d3e50 100%);
+        padding: 110px 2rem 60px;
+        text-align: center;
+      }
+      .postman-logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(239, 108, 34, 0.12);
+        border: 1px solid rgba(239, 108, 34, 0.3);
+        border-radius: 100px;
+        padding: 6px 18px;
+        margin-bottom: 24px;
+      }
+      .postman-logo span {
+        font-size: 20px;
+      }
+      .postman-logo strong {
+        font-size: 13px;
+        color: #ef6c22;
+        font-weight: 600;
+      }
+      .hero h1 {
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        font-weight: 800;
+        color: white;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        margin-bottom: 14px;
+      }
+      .hero h1 em {
+        font-style: normal;
+        color: #ef6c22;
+      }
+      .hero p {
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 1rem;
+        max-width: 500px;
+        margin: 0 auto 36px;
+      }
+      .hero-steps {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .hero-step {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 100px;
+        padding: 6px 14px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .hero-step .n {
+        font-family: var(--mono);
+        color: #ef6c22;
+        font-size: 11px;
+      }
 
-  /* ── LAYOUT ──────────────────────────── */
-  .wrapper { max-width: 820px; margin: 0 auto; padding: 0 2rem; }
-  section { padding: 68px 0; border-top: 1px solid rgba(27,43,58,0.08); }
-  section:first-of-type { border-top: none; }
-  .sec-tag { font-family: var(--mono); font-size: 11px; color: var(--orange); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-  .sec-tag::after { content: ''; flex: 1; height: 1px; background: rgba(239,108,34,0.25); max-width: 50px; }
-  h2 { font-size: clamp(1.4rem,3.5vw,1.9rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px; line-height: 1.2; }
-  h3 { font-size: 1rem; font-weight: 700; margin: 26px 0 10px; color: var(--navy); }
-  p  { color: rgba(27,43,58,0.72); margin-bottom: 14px; }
+      /* ── LAYOUT ──────────────────────────── */
+      .wrapper {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+      section {
+        padding: 68px 0;
+        border-top: 1px solid rgba(27, 43, 58, 0.08);
+      }
+      section:first-of-type {
+        border-top: none;
+      }
+      .sec-tag {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--orange);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sec-tag::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: rgba(239, 108, 34, 0.25);
+        max-width: 50px;
+      }
+      h2 {
+        font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin-bottom: 12px;
+        line-height: 1.2;
+      }
+      h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 26px 0 10px;
+        color: var(--navy);
+      }
+      p {
+        color: rgba(27, 43, 58, 0.72);
+        margin-bottom: 14px;
+      }
 
-  /* ── STEP ────────────────────────────── */
-  .steps { display: flex; flex-direction: column; gap: 0; margin: 20px 0; }
-  .step { display: flex; gap: 16px; padding: 0 0 28px; position: relative; }
-  .step:last-child { padding-bottom: 0; }
-  .step:not(:last-child) .step-line { position: absolute; left: 17px; top: 36px; bottom: 0; width: 2px; background: var(--border); }
-  .step-num { width: 36px; height: 36px; border-radius: 50%; background: var(--orange); color: white; font-family: var(--mono); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; z-index: 1; }
-  .step-num.done { background: var(--teal); }
-  .step-body { flex: 1; padding-top: 6px; }
-  .step-body h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-  .step-body p  { font-size: 13.5px; margin-bottom: 8px; }
+      /* ── STEP ────────────────────────────── */
+      .steps {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin: 20px 0;
+      }
+      .step {
+        display: flex;
+        gap: 16px;
+        padding: 0 0 28px;
+        position: relative;
+      }
+      .step:last-child {
+        padding-bottom: 0;
+      }
+      .step:not(:last-child) .step-line {
+        position: absolute;
+        left: 17px;
+        top: 36px;
+        bottom: 0;
+        width: 2px;
+        background: var(--border);
+      }
+      .step-num {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--orange);
+        color: white;
+        font-family: var(--mono);
+        font-size: 13px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 1;
+      }
+      .step-num.done {
+        background: var(--teal);
+      }
+      .step-body {
+        flex: 1;
+        padding-top: 6px;
+      }
+      .step-body h4 {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .step-body p {
+        font-size: 13.5px;
+        margin-bottom: 8px;
+      }
 
-  /* ── POSTMAN UI MOCKUP ───────────────── */
-  .pm-window { background: #1E2A35; border-radius: 12px; overflow: hidden; margin: 16px 0; border: 1px solid rgba(255,255,255,0.08); }
-  .pm-titlebar { background: #161E27; padding: 10px 16px; display: flex; align-items: center; gap: 8px; }
-  .pm-dots { display: flex; gap: 5px; }
-  .pm-dots span { width: 10px; height: 10px; border-radius: 50%; }
-  .pm-dots span:nth-child(1){background:#FF5F57} .pm-dots span:nth-child(2){background:#FFBD2E} .pm-dots span:nth-child(3){background:#27C93F}
-  .pm-title { font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,0.3); margin-left: 4px; }
+      /* ── POSTMAN UI MOCKUP ───────────────── */
+      .pm-window {
+        background: #1e2a35;
+        border-radius: 12px;
+        overflow: hidden;
+        margin: 16px 0;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .pm-titlebar {
+        background: #161e27;
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .pm-dots {
+        display: flex;
+        gap: 5px;
+      }
+      .pm-dots span {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+      .pm-dots span:nth-child(1) {
+        background: #ff5f57;
+      }
+      .pm-dots span:nth-child(2) {
+        background: #ffbd2e;
+      }
+      .pm-dots span:nth-child(3) {
+        background: #27c93f;
+      }
+      .pm-title {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.3);
+        margin-left: 4px;
+      }
 
-  .pm-toolbar { background: #1A2433; padding: 10px 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .pm-method { font-family: var(--mono); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px; border: none; cursor: default; }
-  .pm-method.GET    { background: rgba(26,123,110,0.2);  color: #2DD4BF; }
-  .pm-method.POST   { background: rgba(212,132,26,0.2);  color: #F5A623; }
-  .pm-method.PUT    { background: rgba(30,95,168,0.2);   color: #63B3ED; }
-  .pm-method.DELETE { background: rgba(192,57,43,0.2);   color: #FC8181; }
-  .pm-url { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 7px 12px; font-family: var(--mono); font-size: 12.5px; color: #E2E8F0; }
-  .pm-url .url-base { color: rgba(255,255,255,0.4); }
-  .pm-url .url-path { color: #F5A623; }
-  .pm-url .url-param { color: #FC8181; }
-  .pm-send { background: #EF6C22; color: white; border: none; border-radius: 6px; padding: 7px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--sans); white-space: nowrap; }
+      .pm-toolbar {
+        background: #1a2433;
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .pm-method {
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: none;
+        cursor: default;
+      }
+      .pm-method.GET {
+        background: rgba(26, 123, 110, 0.2);
+        color: #2dd4bf;
+      }
+      .pm-method.POST {
+        background: rgba(212, 132, 26, 0.2);
+        color: #f5a623;
+      }
+      .pm-method.PUT {
+        background: rgba(30, 95, 168, 0.2);
+        color: #63b3ed;
+      }
+      .pm-method.DELETE {
+        background: rgba(192, 57, 43, 0.2);
+        color: #fc8181;
+      }
+      .pm-url {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        padding: 7px 12px;
+        font-family: var(--mono);
+        font-size: 12.5px;
+        color: #e2e8f0;
+      }
+      .pm-url .url-base {
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .pm-url .url-path {
+        color: #f5a623;
+      }
+      .pm-url .url-param {
+        color: #fc8181;
+      }
+      .pm-send {
+        background: #ef6c22;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 7px 18px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: var(--sans);
+        white-space: nowrap;
+      }
 
-  .pm-tabs { display: flex; gap: 0; background: #161E27; padding: 0 14px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .pm-tab { padding: 8px 14px; font-size: 12px; color: rgba(255,255,255,0.4); cursor: default; border-bottom: 2px solid transparent; }
-  .pm-tab.active { color: #EF6C22; border-bottom-color: #EF6C22; }
+      .pm-tabs {
+        display: flex;
+        gap: 0;
+        background: #161e27;
+        padding: 0 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .pm-tab {
+        padding: 8px 14px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.4);
+        cursor: default;
+        border-bottom: 2px solid transparent;
+      }
+      .pm-tab.active {
+        color: #ef6c22;
+        border-bottom-color: #ef6c22;
+      }
 
-  .pm-body-area { padding: 14px; }
-  .pm-label { font-size: 10px; font-family: var(--mono); color: rgba(255,255,255,0.3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
-  .pm-json { background: rgba(0,0,0,0.2); border-radius: 7px; padding: 14px 16px; font-family: var(--mono); font-size: 12.5px; line-height: 1.8; }
+      .pm-body-area {
+        padding: 14px;
+      }
+      .pm-label {
+        font-size: 10px;
+        font-family: var(--mono);
+        color: rgba(255, 255, 255, 0.3);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .pm-json {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 7px;
+        padding: 14px 16px;
+        font-family: var(--mono);
+        font-size: 12.5px;
+        line-height: 1.8;
+      }
 
-  .pm-response { background: #131C27; padding: 0; border-top: 1px solid rgba(255,255,255,0.06); }
-  .pm-res-bar { display: flex; align-items: center; gap: 10px; padding: 9px 14px; background: #161E27; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .pm-status { font-family: var(--mono); font-size: 12px; font-weight: 600; }
-  .pm-status.ok  { color: #68D391; }
-  .pm-status.err { color: #FC8181; }
-  .pm-time { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,0.3); }
-  .pm-res-body { padding: 14px 16px; font-family: var(--mono); font-size: 12px; line-height: 1.8; color: #A0AEC0; }
+      .pm-response {
+        background: #131c27;
+        padding: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .pm-res-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 14px;
+        background: #161e27;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .pm-status {
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .pm-status.ok {
+        color: #68d391;
+      }
+      .pm-status.err {
+        color: #fc8181;
+      }
+      .pm-time {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.3);
+      }
+      .pm-res-body {
+        padding: 14px 16px;
+        font-family: var(--mono);
+        font-size: 12px;
+        line-height: 1.8;
+        color: #a0aec0;
+      }
 
-  /* syntax */
-  .k { color: #E06C75; } .s { color: #98C379; } .n { color: #D19A66; }
-  .f { color: #61AFEF; } .v { color: #56B6C2; } .c { color: #5C6370; font-style: italic; }
-  .hl { color: #F5A623; } .ok { color: #68D391; } .err-c { color: #FC8181; }
+      /* syntax */
+      .k {
+        color: #e06c75;
+      }
+      .s {
+        color: #98c379;
+      }
+      .n {
+        color: #d19a66;
+      }
+      .f {
+        color: #61afef;
+      }
+      .v {
+        color: #56b6c2;
+      }
+      .c {
+        color: #5c6370;
+        font-style: italic;
+      }
+      .hl {
+        color: #f5a623;
+      }
+      .ok {
+        color: #68d391;
+      }
+      .err-c {
+        color: #fc8181;
+      }
 
-  /* ── CALLOUT ─────────────────────────── */
-  .callout { border-radius: 10px; padding: 14px 18px; margin: 14px 0; font-size: 14px; line-height: 1.6; }
-  .callout-title { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-  .c-info  { background: var(--blue-bg);   border: 1px solid rgba(30,95,168,0.2);   color: #0D3D6B; }
-  .c-warn  { background: var(--gold-bg);   border: 1px solid rgba(212,132,26,0.25); color: #7A4F00; }
-  .c-ok    { background: var(--teal-bg);   border: 1px solid rgba(26,123,110,0.2);  color: #0D4F47; }
-  .c-tip   { background: var(--orange-bg); border: 1px solid rgba(239,108,34,0.2);  color: #7A3000; }
+      /* ── CALLOUT ─────────────────────────── */
+      .callout {
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin: 14px 0;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .callout-title {
+        font-weight: 700;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .c-info {
+        background: var(--blue-bg);
+        border: 1px solid rgba(30, 95, 168, 0.2);
+        color: #0d3d6b;
+      }
+      .c-warn {
+        background: var(--gold-bg);
+        border: 1px solid rgba(212, 132, 26, 0.25);
+        color: #7a4f00;
+      }
+      .c-ok {
+        background: var(--teal-bg);
+        border: 1px solid rgba(26, 123, 110, 0.2);
+        color: #0d4f47;
+      }
+      .c-tip {
+        background: var(--orange-bg);
+        border: 1px solid rgba(239, 108, 34, 0.2);
+        color: #7a3000;
+      }
 
-  /* ── ENDPOINT CARD ───────────────────── */
-  .ep-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; margin: 16px 0; display: flex; align-items: flex-start; gap: 14px; }
-  .ep-method { font-family: var(--mono); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px; flex-shrink: 0; margin-top: 2px; }
-  .m-get    { background: var(--teal-bg); color: var(--teal); }
-  .m-post   { background: var(--gold-bg); color: var(--gold); }
-  .m-put    { background: var(--blue-bg); color: var(--blue); }
-  .m-delete { background: var(--red-bg);  color: var(--red);  }
-  .ep-info h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-  .ep-info code { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+      /* ── ENDPOINT CARD ───────────────────── */
+      .ep-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin: 16px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .ep-method {
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 6px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .m-get {
+        background: var(--teal-bg);
+        color: var(--teal);
+      }
+      .m-post {
+        background: var(--gold-bg);
+        color: var(--gold);
+      }
+      .m-put {
+        background: var(--blue-bg);
+        color: var(--blue);
+      }
+      .m-delete {
+        background: var(--red-bg);
+        color: var(--red);
+      }
+      .ep-info h4 {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .ep-info code {
+        font-family: var(--mono);
+        font-size: 13px;
+        color: var(--muted);
+      }
 
-  /* ── CHECKLIST ───────────────────────── */
-  .checklist { list-style: none; margin: 14px 0; display: flex; flex-direction: column; gap: 8px; }
-  .checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; }
-  .checklist li::before { content: '○'; color: var(--muted); font-size: 14px; min-width: 18px; }
-  .checklist li.done::before { content: '●'; color: var(--teal); }
+      /* ── CHECKLIST ───────────────────────── */
+      .checklist {
+        list-style: none;
+        margin: 14px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .checklist li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14px;
+      }
+      .checklist li::before {
+        content: "○";
+        color: var(--muted);
+        font-size: 14px;
+        min-width: 18px;
+      }
+      .checklist li.done::before {
+        content: "●";
+        color: var(--teal);
+      }
 
-  /* ── ERROR TABLE ─────────────────────── */
-  .err-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 14px 0; }
-  .err-table th { padding: 9px 13px; text-align: left; font-size: 11px; font-family: var(--mono); color: var(--muted); border-bottom: 2px solid var(--border); background: var(--bg); letter-spacing: 0.06em; text-transform: uppercase; }
-  .err-table td { padding: 10px 13px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 13px; }
-  .err-table tr:last-child td { border-bottom: none; }
-  .err-table tr:hover td { background: var(--bg); }
-  .badge { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
-  .badge-red  { background: var(--red-bg);  color: var(--red);  }
-  .badge-gold { background: var(--gold-bg); color: var(--gold); }
-  .badge-teal { background: var(--teal-bg); color: var(--teal); }
+      /* ── ERROR TABLE ─────────────────────── */
+      .err-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+        margin: 14px 0;
+      }
+      .err-table th {
+        padding: 9px 13px;
+        text-align: left;
+        font-size: 11px;
+        font-family: var(--mono);
+        color: var(--muted);
+        border-bottom: 2px solid var(--border);
+        background: var(--bg);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .err-table td {
+        padding: 10px 13px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+        font-size: 13px;
+      }
+      .err-table tr:last-child td {
+        border-bottom: none;
+      }
+      .err-table tr:hover td {
+        background: var(--bg);
+      }
+      .badge {
+        font-family: var(--mono);
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: 500;
+      }
+      .badge-red {
+        background: var(--red-bg);
+        color: var(--red);
+      }
+      .badge-gold {
+        background: var(--gold-bg);
+        color: var(--gold);
+      }
+      .badge-teal {
+        background: var(--teal-bg);
+        color: var(--teal);
+      }
 
-  footer { border-top: 1px solid var(--border); padding: 28px 2rem; text-align: center; max-width: 820px; margin: 0 auto; }
-  footer p { font-size: 13px; color: var(--muted); }
-  footer strong { color: var(--orange); }
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 28px 2rem;
+        text-align: center;
+        max-width: 820px;
+        margin: 0 auto;
+      }
+      footer p {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      footer strong {
+        color: var(--orange);
+      }
 
-  @media (max-width: 600px) {
-    nav .nav-links { display: none; }
-    .wrapper { padding: 0 1.2rem; }
-    .hero { padding: 90px 1.2rem 48px; }
-    .pm-url { font-size: 11px; }
-  }
-</style>
-</head>
-<body>
-
-<div class="progress" id="progress"></div>
-
-<nav>
-  <div class="nav-brand"><em>⬡</em> Panduan Postman — Praktikum API</div>
-  <ul class="nav-links">
-    <li><a href="#setup">Setup</a></li>
-    <li><a href="#get-all">GET All</a></li>
-    <li><a href="#post">POST</a></li>
-    <li><a href="#get-one">GET One</a></li>
-    <li><a href="#put">PUT</a></li>
-    <li><a href="#delete">DELETE</a></li>
-    <li><a href="#tips">Tips</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="postman-logo"><span>🟠</span><strong>Postman Web</strong></div>
-  <h1>Panduan Testing API<br>dengan <em>Postman</em></h1>
-  <p>Pelajari cara hit setiap endpoint server dosen menggunakan Postman Web — tanpa menulis satu baris kode pun.</p>
-  <div class="hero-steps">
-    <div class="hero-step"><span class="n">01</span> Buka & login Postman</div>
-    <div class="hero-step"><span class="n">02</span> Buat collection</div>
-    <div class="hero-step"><span class="n">03</span> GET semua data</div>
-    <div class="hero-step"><span class="n">04</span> POST data diri</div>
-    <div class="hero-step"><span class="n">05</span> GET by NPM</div>
-    <div class="hero-step"><span class="n">06</span> PUT update</div>
-    <div class="hero-step"><span class="n">07</span> DELETE request</div>
-  </div>
-</div>
-
-<div class="wrapper">
-
-<!-- ══ SETUP ══ -->
-<section id="setup">
-  <div class="sec-tag">00 — Persiapan</div>
-  <h2>Setup Postman Web</h2>
-
-  <div class="callout c-info">
-    <div class="callout-title">ℹ️ Kenapa Postman Web, bukan aplikasi desktop?</div>
-    Postman Web bisa dipakai langsung di browser tanpa install apapun. Cocok untuk lab kampus yang tidak mengizinkan instalasi software. Semua fitur yang kita butuhkan tersedia di versi web.
-  </div>
-
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Buka Postman Web</h4>
-        <p>Buka browser, kunjungi <strong>web.postman.co</strong>. Klik <strong>Sign Up</strong> jika belum punya akun, atau <strong>Sign In</strong> jika sudah. Akun gratis sudah cukup.</p>
-        <div class="callout c-tip">
-          <div class="callout-title">💡 Gunakan email kampus atau Gmail</div>
-          Daftar dengan Google Account lebih cepat — klik "Continue with Google".
-        </div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Buat Workspace baru (opsional tapi disarankan)</h4>
-        <p>Di sidebar kiri klik <strong>Workspaces → Create Workspace</strong>. Beri nama misalnya <em>"Praktikum API Institut Mahardika"</em>. Workspace membantu memisahkan request praktikum dari yang lain.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Buat Collection baru</h4>
-        <p>Di sidebar klik ikon <strong>Collections</strong> (ikon folder) → klik tombol <strong>+</strong> → pilih <strong>Blank Collection</strong>. Beri nama <em>"API Mahasiswa"</em>. Collection adalah tempat menyimpan semua request supaya tidak hilang.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num done">✓</div>
-      <div class="step-body">
-        <h4>Siapkan Base URL</h4>
-        <p>Minta IP dan port server ke dosen di kelas. Catat base URL-nya:</p>
-        <div class="pm-window">
-          <div class="pm-titlebar"><div class="pm-dots"><span></span><span></span><span></span></div><span class="pm-title">Base URL server dosen</span></div>
-          <div class="pm-body-area">
-            <div class="pm-json" style="color:#F5A623;font-size:14px">http://<span style="color:#FC8181">192.168.1.10</span>:<span style="color:#63B3ED">3000</span>
-<span style="color:rgba(255,255,255,0.3);font-size:12px">         ↑ IP dosen      ↑ port</span></div>
-          </div>
-        </div>
-        <div class="callout c-warn">
-          <div class="callout-title">⚠️ Pastikan satu jaringan WiFi</div>
-          Laptop kamu dan laptop dosen harus terhubung ke WiFi yang sama. Berbeda jaringan = request tidak sampai.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ GET ALL ══ -->
-<section id="get-all">
-  <div class="sec-tag">01 — Request pertama</div>
-  <h2>GET — Ambil Semua Data</h2>
-
-  <div class="ep-card">
-    <span class="ep-method m-get">GET</span>
-    <div class="ep-info">
-      <h4>Lihat semua mahasiswa yang sudah terdaftar</h4>
-      <code>/api/mahasiswa</code>
-    </div>
-  </div>
-
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Buat request baru di collection</h4>
-        <p>Klik kanan collection "API Mahasiswa" → <strong>Add request</strong>. Beri nama <em>"GET Semua Mahasiswa"</em>.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Atur method dan URL</h4>
-        <p>Pastikan dropdown method menunjukkan <strong>GET</strong>. Ketik URL berikut di kolom URL:</p>
-        <div class="pm-window">
-          <div class="pm-titlebar"><div class="pm-dots"><span></span><span></span><span></span></div><span class="pm-title">GET Semua Mahasiswa</span></div>
-          <div class="pm-toolbar">
-            <div class="pm-method GET">GET</div>
-            <div class="pm-url"><span class="url-base">http://192.168.1.10:3000</span><span class="url-path">/api/mahasiswa</span></div>
-            <button class="pm-send">Send</button>
-          </div>
-        </div>
-        <div class="callout c-info">
-          <div class="callout-title">ℹ️ GET tidak butuh Body</div>
-          Request GET hanya butuh URL. Tidak perlu buka tab Body atau tambahkan Header apapun.
-        </div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Klik Send dan lihat response</h4>
-        <p>Scroll ke bawah — response muncul di panel bawah. Kalau berhasil, status menunjukkan <strong>200 OK</strong>.</p>
-        <div class="pm-window">
-          <div class="pm-titlebar"><div class="pm-dots"><span></span><span></span><span></span></div><span class="pm-title">Response</span></div>
-          <div class="pm-response">
-            <div class="pm-res-bar">
-              <span class="pm-status ok">200 OK</span>
-              <span class="pm-time">48 ms · 312 B</span>
-            </div>
-            <div class="pm-res-body">{
-  <span class="f">"status"</span>: <span class="s">"success"</span>,
-  <span class="f">"message"</span>: <span class="s">"2 data mahasiswa ditemukan"</span>,
-  <span class="f">"total"</span>: <span class="n">2</span>,
-  <span class="f">"data"</span>: [
-    {
-      <span class="f">"npm"</span>: <span class="s">"624C0004"</span>,
-      <span class="f">"nama"</span>: <span class="s">"Budi Santoso"</span>,
-      <span class="f">"prodi"</span>: <span class="s">"Teknik Informatika"</span>,
-      <span class="f">"kelas"</span>: <span class="s">"TI-6A"</span>,
-      <span class="f">"pesan"</span>: <span class="s">"Halo!"</span>,
-      <span class="f">"status"</span>: <span class="s">"active"</span>
-    }
-  ]
-}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num done">✓</div>
-      <div class="step-body">
-        <h4>Simpan request</h4>
-        <p>Klik <strong>Save</strong> (Ctrl+S / Cmd+S). Request tersimpan di collection dan bisa dipakai lagi kapan saja.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ POST ══ -->
-<section id="post">
-  <div class="sec-tag">02 — Kirim data</div>
-  <h2>POST — Daftarkan Data Diri</h2>
-
-  <div class="ep-card">
-    <span class="ep-method m-post">POST</span>
-    <div class="ep-info">
-      <h4>Tambah data mahasiswa baru ke server</h4>
-      <code>/api/mahasiswa</code>
-    </div>
-  </div>
-
-  <div class="callout c-warn">
-    <div class="callout-title">⚠️ POST berbeda dengan GET</div>
-    Request POST mengirim data ke server. Kamu perlu mengatur tiga hal: <strong>method</strong>, <strong>header Content-Type</strong>, dan <strong>body JSON</strong>.
-  </div>
-
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Buat request baru, pilih method POST</h4>
-        <p>Tambah request baru di collection. Klik dropdown method (sebelah kiri kolom URL) → pilih <strong>POST</strong>. Isi URL:</p>
-        <div class="pm-window">
-          <div class="pm-titlebar"><div class="pm-dots"><span></span><span></span><span></span></div><span class="pm-title">POST Daftar Mahasiswa</span></div>
-          <div class="pm-toolbar">
-            <div class="pm-method POST">POST</div>
-            <div class="pm-url"><span class="url-base">http://192.168.1.10:3000</span><span class="url-path">/api/mahasiswa</span></div>
-            <button class="pm-send">Send</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Atur Body — tab Body → raw → JSON</h4>
-        <p>Klik tab <strong>Body</strong> di bawah kolom URL → pilih radio button <strong>raw</strong> → di dropdown sebelah kanan pilih <strong>JSON</strong> (bukan Text). Postman otomatis menambahkan header Content-Type.</p>
-        <div class="pm-window">
-          <div class="pm-titlebar"><div class="pm-dots"><span></span><span></span><span></span></div><span class="pm-title">Tab Body</span></div>
-          <div class="pm-tabs">
-            <span class="pm-tab">Params</span>
-            <span class="pm-tab">Headers</span>
-            <span class="pm-tab active">Body</span>
-            <span class="pm-tab">Pre-req</span>
-          </div>
-          <div class="pm-body-area">
-            <div class="pm-label">● none &nbsp; ○ form-data &nbsp; ○ x-www-form &nbsp; <span style="color:#EF6C22">● raw</span> &nbsp; ○ binary &nbsp;&nbsp;&nbsp; <span style="background:rgba(239,108,34,0.2);color:#EF6C22;padding:2px 8px;border-radius:4px;font-size:11px;font-family:var(--mono)">JSON ▼</span></div>
-            <div class="pm-json">
-{
-  <span class="f">"npm"</span>:   <span class="s">"624C0004"</span>,
-  <span class="f">"nama"</span>:  <span class="s">"Nama Kamu"</span>,
-  <span class="f">"prodi"</span>: <span class="s">"Teknik Informatika"</span>,
-  <span class="f">"kelas"</span>: <span class="s">"TI-6A"</span>,
-  <span class="f">"pesan"</span>: <span class="s">"Halo dari Postman!"</span>
-}</div>
-          </div>
-        </div>
-        <div class="callout c-tip">
-          <div class="callout-title">💡 Ganti dengan data dirimu</div>
-          Isi <code style="font-family:var(--mono);font-size:12px">npm</code> dengan NPM aslimu (contoh: 624C0004), <code style="font-family:var(--mono);font-size:12px">nama</code> dengan nama lengkap, dan seterusnya. Field <code style="font-family:var(--mono);font-size:12px">pesan</code> boleh dikosongkan atau dihapus.
-        </div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Klik Send — response harus 201 Created</h4>
-        <div class="pm-window">
-          <div class="pm-titlebar"><div class="pm-dots"><span></span><span></span><span></span></div><span class="pm-title">Response</span></div>
-          <div class="pm-response">
-            <div class="pm-res-bar">
-              <span class="pm-status ok">201 Created</span>
-              <span class="pm-time">62 ms · 198 B</span>
-            </div>
-            <div class="pm-res-body">{
-  <span class="f">"status"</span>:  <span class="s">"success"</span>,
-  <span class="f">"message"</span>: <span class="s">"Data berhasil ditambahkan"</span>,
-  <span class="f">"data"</span>: {
-    <span class="f">"npm"</span>:    <span class="s">"624C0004"</span>,
-    <span class="f">"nama"</span>:   <span class="s">"Nama Kamu"</span>,
-    <span class="f">"prodi"</span>:  <span class="s">"Teknik Informatika"</span>,
-    <span class="f">"kelas"</span>:  <span class="s">"TI-6A"</span>,
-    <span class="f">"pesan"</span>:  <span class="s">"Halo dari Postman!"</span>,
-    <span class="f">"status"</span>: <span class="s">"active"</span>
-  }
-}</div>
-          </div>
-        </div>
-        <div class="callout c-warn">
-          <div class="callout-title">⚠️ Kalau muncul 409 Conflict</div>
-          NPM kamu sudah terdaftar sebelumnya. Cek dengan GET all apakah datamu sudah ada. Satu NPM hanya boleh didaftarkan satu kali.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ GET ONE ══ -->
-<section id="get-one">
-  <div class="sec-tag">03 — Path parameter</div>
-  <h2>GET — Cari by NPM</h2>
-
-  <div class="ep-card">
-    <span class="ep-method m-get">GET</span>
-    <div class="ep-info">
-      <h4>Ambil data satu mahasiswa berdasarkan NPM</h4>
-      <code>/api/mahasiswa/:npm</code>
-    </div>
-  </div>
-
-  <p>Endpoint ini menggunakan <strong>path parameter</strong> — NPM dimasukkan langsung ke dalam URL. Tidak ada body, tidak ada header tambahan.</p>
-
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Isi URL dengan NPM di bagian path</h4>
-        <div class="pm-window">
-          <div class="pm-titlebar"><div class="pm-dots"><span></span><span></span><span></span></div><span class="pm-title">GET Mahasiswa by NPM</span></div>
-          <div class="pm-toolbar">
-            <div class="pm-method GET">GET</div>
-            <div class="pm-url"><span class="url-base">http://192.168.1.10:3000</span><span class="url-path">/api/mahasiswa/</span><span class="url-param">624C0004</span></div>
-            <button class="pm-send">Send</button>
-          </div>
-        </div>
-        <div class="callout c-info">
-          <div class="callout-title">ℹ️ Path parameter vs Query string</div>
-          Path parameter: <code style="font-family:var(--mono);font-size:12px">/api/mahasiswa/<strong>624C0004</strong></code> — NPM jadi bagian URL.<br>
-          Query string: <code style="font-family:var(--mono);font-size:12px">/api/mahasiswa?npm=624C0004</code> — ini berbeda dan tidak akan bekerja di endpoint ini.
-        </div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num done">✓</div>
-      <div class="step-body">
-        <h4>Response 200 — data satu mahasiswa</h4>
-        <div class="pm-window">
-          <div class="pm-titlebar"><div class="pm-dots"><span></span><span></span><span></span></div><span class="pm-title">Response</span></div>
-          <div class="pm-response">
-            <div class="pm-res-bar"><span class="pm-status ok">200 OK</span><span class="pm-time">35 ms</span></div>
-            <div class="pm-res-body">{
-  <span class="f">"status"</span>:  <span class="s">"success"</span>,
-  <span class="f">"message"</span>: <span class="s">"Data ditemukan"</span>,
-  <span class="f">"data"</span>: {
-    <span class="f">"npm"</span>: <span class="s">"624C0004"</span>, <span class="f">"nama"</span>: <span class="s">"Nama Kamu"</span>, ...
-  }
-}</div>
-          </div>
-        </div>
-        <p style="margin-top:10px">Coba juga NPM yang tidak ada → harusnya muncul <strong>404 Not Found</strong>.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ PUT ══ -->
-<section id="put">
-  <div class="sec-tag">04 — Update data</div>
-  <h2>PUT — Update Data</h2>
-
-  <div class="ep-card">
-    <span class="ep-method m-put">PUT</span>
-    <div class="ep-info">
-      <h4>Ubah sebagian atau seluruh data mahasiswa</h4>
-      <code>/api/mahasiswa/:npm</code>
-    </div>
-  </div>
-
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Method PUT + URL dengan path parameter</h4>
-        <div class="pm-window">
-          <div class="pm-titlebar"><div class="pm-dots"><span></span><span></span><span></span></div><span class="pm-title">PUT Update Mahasiswa</span></div>
-          <div class="pm-toolbar">
-            <div class="pm-method PUT">PUT</div>
-            <div class="pm-url"><span class="url-base">http://192.168.1.10:3000</span><span class="url-path">/api/mahasiswa/</span><span class="url-param">624C0004</span></div>
-            <button class="pm-send">Send</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Body → raw → JSON — isi field yang ingin diubah saja</h4>
-        <p>Tidak perlu kirim semua field. Cukup field yang mau diubah:</p>
-        <div class="pm-window">
-          <div class="pm-titlebar"><div class="pm-dots"><span></span><span></span><span></span></div><span class="pm-title">Body — hanya field yang berubah</span></div>
-          <div class="pm-tabs"><span class="pm-tab active">Body</span></div>
-          <div class="pm-body-area">
-            <div class="pm-label">● raw &nbsp; JSON ▼</div>
-            <div class="pm-json">{
-  <span class="f">"pesan"</span>: <span class="s">"Pesan saya sudah diupdate via Postman"</span>
-}
-
-<span class="c">// cukup field yang berubah saja</span>
-<span class="c">// field lain (npm, nama, dll) tidak perlu dikirim</span></div>
-          </div>
-        </div>
-        <div class="callout c-ok">
-          <div class="callout-title">✓ Response 200 — data setelah diupdate</div>
-          Server akan membalas dengan data terbaru. Cek field yang kamu ubah sudah berubah di response.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ DELETE ══ -->
-<section id="delete">
-  <div class="sec-tag">05 — Request hapus</div>
-  <h2>DELETE — Request Hapus Data</h2>
-
-  <div class="ep-card">
-    <span class="ep-method m-delete">DELETE</span>
-    <div class="ep-info">
-      <h4>Kirim permintaan hapus — masuk antrian dosen</h4>
-      <code>/api/mahasiswa/:npm</code>
-    </div>
-  </div>
-
-  <div class="callout c-warn">
-    <div class="callout-title">⚠️ Data tidak langsung terhapus</div>
-    Request DELETE akan membuat statusmu masuk ke antrian <em>pending</em>. Dosen yang akan approve atau reject dari panel admin mereka. Jika di-approve, data dihapus permanen.
-  </div>
-
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Method DELETE + URL dengan path parameter</h4>
-        <p>DELETE tidak butuh Body — hanya URL dan method yang benar.</p>
-        <div class="pm-window">
-          <div class="pm-titlebar"><div class="pm-dots"><span></span><span></span><span></span></div><span class="pm-title">DELETE Request Hapus</span></div>
-          <div class="pm-toolbar">
-            <div class="pm-method DELETE">DELETE</div>
-            <div class="pm-url"><span class="url-base">http://192.168.1.10:3000</span><span class="url-path">/api/mahasiswa/</span><span class="url-param">624C0004</span></div>
-            <button class="pm-send">Send</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num done">✓</div>
-      <div class="step-body">
-        <h4>Response — status pending</h4>
-        <div class="pm-window">
-          <div class="pm-titlebar"><div class="pm-dots"><span></span><span></span><span></span></div><span class="pm-title">Response</span></div>
-          <div class="pm-response">
-            <div class="pm-res-bar"><span class="pm-status ok">200 OK</span><span class="pm-time">41 ms</span></div>
-            <div class="pm-res-body">{
-  <span class="f">"status"</span>:  <span class="s">"pending"</span>,
-  <span class="f">"message"</span>: <span class="s">"Permintaan hapus untuk NPM 624C0004 sudah dikirim. Menunggu persetujuan dosen."</span>,
-  <span class="f">"data"</span>: { <span class="f">"npm"</span>: <span class="s">"624C0004"</span>, <span class="f">"nama"</span>: <span class="s">"Nama Kamu"</span> }
-}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ TIPS ══ -->
-<section id="tips">
-  <div class="sec-tag">06 — Produktivitas</div>
-  <h2>Tips Postman yang Perlu Tahu</h2>
-
-  <h3>Environment Variable — supaya tidak perlu ketik URL berulang</h3>
-  <p>Daripada ketik <code style="font-family:var(--mono);font-size:13px">http://192.168.1.10:3000</code> di setiap request, simpan sebagai variable:</p>
-  <div class="steps" style="margin-top:14px">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Buat Environment</h4>
-        <p>Klik ikon <strong>Environments</strong> di sidebar → <strong>+</strong> → beri nama <em>"Server Dosen"</em>.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-line"></div>
-      <div class="step-body">
-        <h4>Tambah variable BASE_URL</h4>
-        <div class="pm-window">
-          <div class="pm-titlebar"><div class="pm-dots"><span></span><span></span><span></span></div><span class="pm-title">Environment: Server Dosen</span></div>
-          <div class="pm-body-area">
-            <div class="pm-json" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">
-              <span style="color:rgba(255,255,255,0.4)">VARIABLE</span><span style="color:rgba(255,255,255,0.4)">INITIAL VALUE</span>
-              <span class="hl">BASE_URL</span><span class="s">http://192.168.1.10:3000</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-num done">✓</div>
-      <div class="step-body">
-        <h4>Gunakan di URL setiap request</h4>
-        <div class="pm-window">
-          <div class="pm-titlebar"><div class="pm-dots"><span></span><span></span><span></span></div></div>
-          <div class="pm-toolbar">
-            <div class="pm-method GET">GET</div>
-            <div class="pm-url"><span style="color:#68D391">{{BASE_URL}}</span><span class="url-path">/api/mahasiswa</span></div>
-            <button class="pm-send">Send</button>
-          </div>
-        </div>
-        <p style="margin-top:8px">Kalau IP dosen berubah, cukup update di satu tempat — semua request ikut berubah.</p>
-      </div>
-    </div>
-  </div>
-
-  <h3>Tabel error yang sering muncul di Postman</h3>
-  <table class="err-table">
-    <thead><tr><th>Status</th><th>Artinya</th><th>Yang harus dicek</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><span class="badge badge-teal">200 OK</span></td>
-        <td>Request berhasil, data ditemukan</td>
-        <td>—</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-teal">201 Created</span></td>
-        <td>Data baru berhasil dibuat</td>
-        <td>—</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-gold">400 Bad Request</span></td>
-        <td>Data yang dikirim tidak lengkap atau formatnya salah</td>
-        <td>Pastikan semua field wajib terisi dan JSON valid (tidak ada koma berlebih)</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-gold">404 Not Found</span></td>
-        <td>NPM tidak ditemukan atau URL salah</td>
-        <td>Cek penulisan URL — pastikan ada <code style="font-family:var(--mono);font-size:12px">/api/mahasiswa/</code> sebelum NPM</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-gold">409 Conflict</span></td>
-        <td>NPM sudah terdaftar atau sudah di antrian hapus</td>
-        <td>Gunakan NPM yang belum pernah didaftarkan</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-gold">422 Unprocessable</span></td>
-        <td>Format nilai field salah (terlalu pendek, terlalu panjang)</td>
-        <td>NPM maks 10 karakter, Nama min 2 karakter</td>
-      </tr>
-      <tr>
-        <td><span class="badge badge-red">Could not get response</span></td>
-        <td>Server tidak bisa dihubungi</td>
-        <td>Cek IP, Port, dan koneksi WiFi — pastikan satu jaringan dengan dosen</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="callout c-ok" style="margin-top:20px">
-    <div class="callout-title">✓ Checklist sebelum selesai praktik</div>
-    <ul class="checklist">
-      <li>GET semua data — muncul list mahasiswa dari server</li>
-      <li>POST data diri — response 201, dataku muncul di GET all</li>
-      <li>GET by NPM — response 200 dengan data spesifik milikku</li>
-      <li>PUT update — ubah pesan, response 200, perubahan terlihat di GET</li>
-      <li>DELETE request — response pending, dosen konfirmasi menerima request</li>
-    </ul>
-  </div>
-</section>
-
-</div>
-
-<footer>
-  <p>Panduan Postman Web — Praktikum API &nbsp;·&nbsp; <strong>Institut Mahardika</strong></p>
-</footer>
-
-<script>
-  window.addEventListener('scroll', () => {
-    document.getElementById('progress').style.width =
-      (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100) + '%'
-  })
-  document.querySelectorAll('section[id]').forEach(s =>
-    new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'))
-          const a = document.querySelector(`.nav-links a[href="#${e.target.id}"]`)
-          if (a) a.classList.add('active')
+      @media (max-width: 600px) {
+        nav .nav-links {
+          display: none;
         }
-      })
-    }, { rootMargin: '-40% 0px -55% 0px' }).observe(s)
-  )
-</script>
-</body>
+        .wrapper {
+          padding: 0 1.2rem;
+        }
+        .hero {
+          padding: 90px 1.2rem 48px;
+        }
+        .pm-url {
+          font-size: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="progress" id="progress"></div>
+
+    <nav>
+      <div class="nav-brand"><em>⬡</em> Panduan Postman — Praktikum API</div>
+      <ul class="nav-links">
+        <li><a href="#setup">Setup</a></li>
+        <li><a href="#get-all">GET All</a></li>
+        <li><a href="#post">POST</a></li>
+        <li><a href="#get-one">GET One</a></li>
+        <li><a href="#put">PUT</a></li>
+        <li><a href="#delete">DELETE</a></li>
+        <li><a href="#tips">Tips</a></li>
+      </ul>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="postman-logo">
+        <span>🟠</span><strong>Postman Web</strong>
+      </div>
+      <h1>Panduan Testing API<br />dengan <em>Postman</em></h1>
+      <p>
+        Pelajari cara hit setiap endpoint server dosen menggunakan Postman Web —
+        tanpa menulis satu baris kode pun.
+      </p>
+      <div class="hero-steps">
+        <div class="hero-step">
+          <span class="n">01</span> Buka & login Postman
+        </div>
+        <div class="hero-step"><span class="n">02</span> Buat collection</div>
+        <div class="hero-step"><span class="n">03</span> GET semua data</div>
+        <div class="hero-step"><span class="n">04</span> POST data diri</div>
+        <div class="hero-step"><span class="n">05</span> GET by NPM</div>
+        <div class="hero-step"><span class="n">06</span> PUT update</div>
+        <div class="hero-step"><span class="n">07</span> DELETE request</div>
+      </div>
+    </div>
+
+    <div class="wrapper">
+      <!-- ══ SETUP ══ -->
+      <section id="setup">
+        <div class="sec-tag">00 — Persiapan</div>
+        <h2>Setup Postman Web</h2>
+
+        <div class="callout c-info">
+          <div class="callout-title">
+            ℹ️ Kenapa Postman Web, bukan aplikasi desktop?
+          </div>
+          Postman Web bisa dipakai langsung di browser tanpa install apapun.
+          Cocok untuk lab kampus yang tidak mengizinkan instalasi software.
+          Semua fitur yang kita butuhkan tersedia di versi web.
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Buka Postman Web</h4>
+              <p>
+                Buka browser, kunjungi <strong>web.postman.co</strong>. Klik
+                <strong>Sign Up</strong> jika belum punya akun, atau
+                <strong>Sign In</strong> jika sudah. Akun gratis sudah cukup.
+              </p>
+              <div class="callout c-tip">
+                <div class="callout-title">
+                  💡 Gunakan email kampus atau Gmail
+                </div>
+                Daftar dengan Google Account lebih cepat — klik "Continue with
+                Google".
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Buat Workspace baru (opsional tapi disarankan)</h4>
+              <p>
+                Di sidebar kiri klik
+                <strong>Workspaces → Create Workspace</strong>. Beri nama
+                misalnya <em>"Praktikum API Institut Mahardika"</em>. Workspace
+                membantu memisahkan request praktikum dari yang lain.
+              </p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Buat Collection baru</h4>
+              <p>
+                Di sidebar klik ikon <strong>Collections</strong> (ikon folder)
+                → klik tombol <strong>+</strong> → pilih
+                <strong>Blank Collection</strong>. Beri nama
+                <em>"API Mahasiswa"</em>. Collection adalah tempat menyimpan
+                semua request supaya tidak hilang.
+              </p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num done">✓</div>
+            <div class="step-body">
+              <h4>Siapkan Base URL</h4>
+              <p>
+                Minta IP dan port server ke dosen di kelas. Catat base URL-nya:
+              </p>
+              <div class="pm-window">
+                <div class="pm-titlebar">
+                  <div class="pm-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="pm-title">Base URL server dosen</span>
+                </div>
+                <div class="pm-body-area">
+                  <div class="pm-json" style="color: #f5a623; font-size: 14px">
+                    http://<span style="color: #fc8181">192.168.1.10</span
+                    >:<span style="color: #63b3ed">3000</span>
+                    <span
+                      style="color: rgba(255, 255, 255, 0.3); font-size: 12px"
+                    >
+                      ↑ IP dosen ↑ port</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="callout c-warn">
+                <div class="callout-title">⚠️ Pastikan satu jaringan WiFi</div>
+                Laptop kamu dan laptop dosen harus terhubung ke WiFi yang sama.
+                Berbeda jaringan = request tidak sampai.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ GET ALL ══ -->
+      <section id="get-all">
+        <div class="sec-tag">01 — Request pertama</div>
+        <h2>GET — Ambil Semua Data</h2>
+
+        <div class="ep-card">
+          <span class="ep-method m-get">GET</span>
+          <div class="ep-info">
+            <h4>Lihat semua mahasiswa yang sudah terdaftar</h4>
+            <code>/api/mahasiswa</code>
+          </div>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Buat request baru di collection</h4>
+              <p>
+                Klik kanan collection "API Mahasiswa" →
+                <strong>Add request</strong>. Beri nama
+                <em>"GET Semua Mahasiswa"</em>.
+              </p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Atur method dan URL</h4>
+              <p>
+                Pastikan dropdown method menunjukkan <strong>GET</strong>. Ketik
+                URL berikut di kolom URL:
+              </p>
+              <div class="pm-window">
+                <div class="pm-titlebar">
+                  <div class="pm-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="pm-title">GET Semua Mahasiswa</span>
+                </div>
+                <div class="pm-toolbar">
+                  <div class="pm-method GET">GET</div>
+                  <div class="pm-url">
+                    <span class="url-base">http://192.168.1.10:3000</span
+                    ><span class="url-path">/api/mahasiswa</span>
+                  </div>
+                  <button class="pm-send">Send</button>
+                </div>
+              </div>
+              <div class="callout c-info">
+                <div class="callout-title">ℹ️ GET tidak butuh Body</div>
+                Request GET hanya butuh URL. Tidak perlu buka tab Body atau
+                tambahkan Header apapun.
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Klik Send dan lihat response</h4>
+              <p>
+                Scroll ke bawah — response muncul di panel bawah. Kalau
+                berhasil, status menunjukkan <strong>200 OK</strong>.
+              </p>
+              <div class="pm-window">
+                <div class="pm-titlebar">
+                  <div class="pm-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="pm-title">Response</span>
+                </div>
+                <div class="pm-response">
+                  <div class="pm-res-bar">
+                    <span class="pm-status ok">200 OK</span>
+                    <span class="pm-time">48 ms · 312 B</span>
+                  </div>
+                  <div class="pm-res-body">
+                    { <span class="f">"status"</span>:
+                    <span class="s">"success"</span>,
+                    <span class="f">"message"</span>:
+                    <span class="s">"2 data mahasiswa ditemukan"</span>,
+                    <span class="f">"total"</span>: <span class="n">2</span>,
+                    <span class="f">"data"</span>: [ {
+                    <span class="f">"npm"</span>:
+                    <span class="s">"624C0004"</span>,
+                    <span class="f">"nama"</span>:
+                    <span class="s">"Budi Santoso"</span>,
+                    <span class="f">"prodi"</span>:
+                    <span class="s">"Teknik Informatika"</span>,
+                    <span class="f">"kelas"</span>:
+                    <span class="s">"TI-6A"</span>,
+                    <span class="f">"pesan"</span>:
+                    <span class="s">"Halo!"</span>,
+                    <span class="f">"status"</span>:
+                    <span class="s">"active"</span> } ] }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num done">✓</div>
+            <div class="step-body">
+              <h4>Simpan request</h4>
+              <p>
+                Klik <strong>Save</strong> (Ctrl+S / Cmd+S). Request tersimpan
+                di collection dan bisa dipakai lagi kapan saja.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ POST ══ -->
+      <section id="post">
+        <div class="sec-tag">02 — Kirim data</div>
+        <h2>POST — Daftarkan Data Diri</h2>
+
+        <div class="ep-card">
+          <span class="ep-method m-post">POST</span>
+          <div class="ep-info">
+            <h4>Tambah data mahasiswa baru ke server</h4>
+            <code>/api/mahasiswa</code>
+          </div>
+        </div>
+
+        <div class="callout c-warn">
+          <div class="callout-title">⚠️ POST berbeda dengan GET</div>
+          Request POST mengirim data ke server. Kamu perlu mengatur tiga hal:
+          <strong>method</strong>, <strong>header Content-Type</strong>, dan
+          <strong>body JSON</strong>.
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Buat request baru, pilih method POST</h4>
+              <p>
+                Tambah request baru di collection. Klik dropdown method (sebelah
+                kiri kolom URL) → pilih <strong>POST</strong>. Isi URL:
+              </p>
+              <div class="pm-window">
+                <div class="pm-titlebar">
+                  <div class="pm-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="pm-title">POST Daftar Mahasiswa</span>
+                </div>
+                <div class="pm-toolbar">
+                  <div class="pm-method POST">POST</div>
+                  <div class="pm-url">
+                    <span class="url-base">http://192.168.1.10:3000</span
+                    ><span class="url-path">/api/mahasiswa</span>
+                  </div>
+                  <button class="pm-send">Send</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Atur Body — tab Body → raw → JSON</h4>
+              <p>
+                Klik tab <strong>Body</strong> di bawah kolom URL → pilih radio
+                button <strong>raw</strong> → di dropdown sebelah kanan pilih
+                <strong>JSON</strong> (bukan Text). Postman otomatis menambahkan
+                header Content-Type.
+              </p>
+              <div class="pm-window">
+                <div class="pm-titlebar">
+                  <div class="pm-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="pm-title">Tab Body</span>
+                </div>
+                <div class="pm-tabs">
+                  <span class="pm-tab">Params</span>
+                  <span class="pm-tab">Headers</span>
+                  <span class="pm-tab active">Body</span>
+                  <span class="pm-tab">Pre-req</span>
+                </div>
+                <div class="pm-body-area">
+                  <div class="pm-label">
+                    ● none &nbsp; ○ form-data &nbsp; ○ x-www-form &nbsp;
+                    <span style="color: #ef6c22">● raw</span> &nbsp; ○ binary
+                    &nbsp;&nbsp;&nbsp;
+                    <span
+                      style="
+                        background: rgba(239, 108, 34, 0.2);
+                        color: #ef6c22;
+                        padding: 2px 8px;
+                        border-radius: 4px;
+                        font-size: 11px;
+                        font-family: var(--mono);
+                      "
+                      >JSON ▼</span
+                    >
+                  </div>
+                  <div class="pm-json">
+                    {
+                    <span class="f">"npm"</span>:
+                    <span class="s">"624C0004"</span>,
+                    <span class="f">"nama"</span>:
+                    <span class="s">"Nama Kamu"</span>,
+                    <span class="f">"prodi"</span>:
+                    <span class="s">"Teknik Informatika"</span>,
+                    <span class="f">"kelas"</span>:
+                    <span class="s">"TI-6A"</span>,
+                    <span class="f">"pesan"</span>:
+                    <span class="s">"Halo dari Postman!"</span> }
+                  </div>
+                </div>
+              </div>
+              <div class="callout c-tip">
+                <div class="callout-title">💡 Ganti dengan data dirimu</div>
+                Isi
+                <code style="font-family: var(--mono); font-size: 12px"
+                  >npm</code
+                >
+                dengan NPM aslimu (contoh: 624C0004),
+                <code style="font-family: var(--mono); font-size: 12px"
+                  >nama</code
+                >
+                dengan nama lengkap, dan seterusnya. Field
+                <code style="font-family: var(--mono); font-size: 12px"
+                  >pesan</code
+                >
+                boleh dikosongkan atau dihapus.
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Klik Send — response harus 201 Created</h4>
+              <div class="pm-window">
+                <div class="pm-titlebar">
+                  <div class="pm-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="pm-title">Response</span>
+                </div>
+                <div class="pm-response">
+                  <div class="pm-res-bar">
+                    <span class="pm-status ok">201 Created</span>
+                    <span class="pm-time">62 ms · 198 B</span>
+                  </div>
+                  <div class="pm-res-body">
+                    { <span class="f">"status"</span>:
+                    <span class="s">"success"</span>,
+                    <span class="f">"message"</span>:
+                    <span class="s">"Data berhasil ditambahkan"</span>,
+                    <span class="f">"data"</span>: {
+                    <span class="f">"npm"</span>:
+                    <span class="s">"624C0004"</span>,
+                    <span class="f">"nama"</span>:
+                    <span class="s">"Nama Kamu"</span>,
+                    <span class="f">"prodi"</span>:
+                    <span class="s">"Teknik Informatika"</span>,
+                    <span class="f">"kelas"</span>:
+                    <span class="s">"TI-6A"</span>,
+                    <span class="f">"pesan"</span>:
+                    <span class="s">"Halo dari Postman!"</span>,
+                    <span class="f">"status"</span>:
+                    <span class="s">"active"</span> } }
+                  </div>
+                </div>
+              </div>
+              <div class="callout c-warn">
+                <div class="callout-title">⚠️ Kalau muncul 409 Conflict</div>
+                NPM kamu sudah terdaftar sebelumnya. Cek dengan GET all apakah
+                datamu sudah ada. Satu NPM hanya boleh didaftarkan satu kali.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ GET ONE ══ -->
+      <section id="get-one">
+        <div class="sec-tag">03 — Path parameter</div>
+        <h2>GET — Cari by NPM</h2>
+
+        <div class="ep-card">
+          <span class="ep-method m-get">GET</span>
+          <div class="ep-info">
+            <h4>Ambil data satu mahasiswa berdasarkan NPM</h4>
+            <code>/api/mahasiswa/:npm</code>
+          </div>
+        </div>
+
+        <p>
+          Endpoint ini menggunakan <strong>path parameter</strong> — NPM
+          dimasukkan langsung ke dalam URL. Tidak ada body, tidak ada header
+          tambahan.
+        </p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Isi URL dengan NPM di bagian path</h4>
+              <div class="pm-window">
+                <div class="pm-titlebar">
+                  <div class="pm-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="pm-title">GET Mahasiswa by NPM</span>
+                </div>
+                <div class="pm-toolbar">
+                  <div class="pm-method GET">GET</div>
+                  <div class="pm-url">
+                    <span class="url-base">http://192.168.1.10:3000</span
+                    ><span class="url-path">/api/mahasiswa/</span
+                    ><span class="url-param">624C0004</span>
+                  </div>
+                  <button class="pm-send">Send</button>
+                </div>
+              </div>
+              <div class="callout c-info">
+                <div class="callout-title">
+                  ℹ️ Path parameter vs Query string
+                </div>
+                Path parameter:
+                <code style="font-family: var(--mono); font-size: 12px"
+                  >/api/mahasiswa/<strong>624C0004</strong></code
+                >
+                — NPM jadi bagian URL.<br />
+                Query string:
+                <code style="font-family: var(--mono); font-size: 12px"
+                  >/api/mahasiswa?npm=624C0004</code
+                >
+                — ini berbeda dan tidak akan bekerja di endpoint ini.
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num done">✓</div>
+            <div class="step-body">
+              <h4>Response 200 — data satu mahasiswa</h4>
+              <div class="pm-window">
+                <div class="pm-titlebar">
+                  <div class="pm-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="pm-title">Response</span>
+                </div>
+                <div class="pm-response">
+                  <div class="pm-res-bar">
+                    <span class="pm-status ok">200 OK</span
+                    ><span class="pm-time">35 ms</span>
+                  </div>
+                  <div class="pm-res-body">
+                    { <span class="f">"status"</span>:
+                    <span class="s">"success"</span>,
+                    <span class="f">"message"</span>:
+                    <span class="s">"Data ditemukan"</span>,
+                    <span class="f">"data"</span>: {
+                    <span class="f">"npm"</span>:
+                    <span class="s">"624C0004"</span>,
+                    <span class="f">"nama"</span>:
+                    <span class="s">"Nama Kamu"</span>, ... } }
+                  </div>
+                </div>
+              </div>
+              <p style="margin-top: 10px">
+                Coba juga NPM yang tidak ada → harusnya muncul
+                <strong>404 Not Found</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ PUT ══ -->
+      <section id="put">
+        <div class="sec-tag">04 — Update data</div>
+        <h2>PUT — Update Data</h2>
+
+        <div class="ep-card">
+          <span class="ep-method m-put">PUT</span>
+          <div class="ep-info">
+            <h4>Ubah sebagian atau seluruh data mahasiswa</h4>
+            <code>/api/mahasiswa/:npm</code>
+          </div>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Method PUT + URL dengan path parameter</h4>
+              <div class="pm-window">
+                <div class="pm-titlebar">
+                  <div class="pm-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="pm-title">PUT Update Mahasiswa</span>
+                </div>
+                <div class="pm-toolbar">
+                  <div class="pm-method PUT">PUT</div>
+                  <div class="pm-url">
+                    <span class="url-base">http://192.168.1.10:3000</span
+                    ><span class="url-path">/api/mahasiswa/</span
+                    ><span class="url-param">624C0004</span>
+                  </div>
+                  <button class="pm-send">Send</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Body → raw → JSON — isi field yang ingin diubah saja</h4>
+              <p>Tidak perlu kirim semua field. Cukup field yang mau diubah:</p>
+              <div class="pm-window">
+                <div class="pm-titlebar">
+                  <div class="pm-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="pm-title">Body — hanya field yang berubah</span>
+                </div>
+                <div class="pm-tabs">
+                  <span class="pm-tab active">Body</span>
+                </div>
+                <div class="pm-body-area">
+                  <div class="pm-label">● raw &nbsp; JSON ▼</div>
+                  <div class="pm-json">
+                    { <span class="f">"pesan"</span>:
+                    <span class="s"
+                      >"Pesan saya sudah diupdate via Postman"</span
+                    >
+                    }
+
+                    <span class="c">// cukup field yang berubah saja</span>
+                    <span class="c"
+                      >// field lain (npm, nama, dll) tidak perlu dikirim</span
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="callout c-ok">
+                <div class="callout-title">
+                  ✓ Response 200 — data setelah diupdate
+                </div>
+                Server akan membalas dengan data terbaru. Cek field yang kamu
+                ubah sudah berubah di response.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ DELETE ══ -->
+      <section id="delete">
+        <div class="sec-tag">05 — Request hapus</div>
+        <h2>DELETE — Request Hapus Data</h2>
+
+        <div class="ep-card">
+          <span class="ep-method m-delete">DELETE</span>
+          <div class="ep-info">
+            <h4>Kirim permintaan hapus — masuk antrian dosen</h4>
+            <code>/api/mahasiswa/:npm</code>
+          </div>
+        </div>
+
+        <div class="callout c-warn">
+          <div class="callout-title">⚠️ Data tidak langsung terhapus</div>
+          Request DELETE akan membuat statusmu masuk ke antrian
+          <em>pending</em>. Dosen yang akan approve atau reject dari panel admin
+          mereka. Jika di-approve, data dihapus permanen.
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Method DELETE + URL dengan path parameter</h4>
+              <p>DELETE tidak butuh Body — hanya URL dan method yang benar.</p>
+              <div class="pm-window">
+                <div class="pm-titlebar">
+                  <div class="pm-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="pm-title">DELETE Request Hapus</span>
+                </div>
+                <div class="pm-toolbar">
+                  <div class="pm-method DELETE">DELETE</div>
+                  <div class="pm-url">
+                    <span class="url-base">http://192.168.1.10:3000</span
+                    ><span class="url-path">/api/mahasiswa/</span
+                    ><span class="url-param">624C0004</span>
+                  </div>
+                  <button class="pm-send">Send</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num done">✓</div>
+            <div class="step-body">
+              <h4>Response — status pending</h4>
+              <div class="pm-window">
+                <div class="pm-titlebar">
+                  <div class="pm-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="pm-title">Response</span>
+                </div>
+                <div class="pm-response">
+                  <div class="pm-res-bar">
+                    <span class="pm-status ok">200 OK</span
+                    ><span class="pm-time">41 ms</span>
+                  </div>
+                  <div class="pm-res-body">
+                    { <span class="f">"status"</span>:
+                    <span class="s">"pending"</span>,
+                    <span class="f">"message"</span>:
+                    <span class="s"
+                      >"Permintaan hapus untuk NPM 624C0004 sudah dikirim.
+                      Menunggu persetujuan dosen."</span
+                    >, <span class="f">"data"</span>: {
+                    <span class="f">"npm"</span>:
+                    <span class="s">"624C0004"</span>,
+                    <span class="f">"nama"</span>:
+                    <span class="s">"Nama Kamu"</span> } }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ TIPS ══ -->
+      <section id="tips">
+        <div class="sec-tag">06 — Produktivitas</div>
+        <h2>Tips Postman yang Perlu Tahu</h2>
+
+        <h3>Environment Variable — supaya tidak perlu ketik URL berulang</h3>
+        <p>
+          Daripada ketik
+          <code style="font-family: var(--mono); font-size: 13px"
+            >http://192.168.1.10:3000</code
+          >
+          di setiap request, simpan sebagai variable:
+        </p>
+        <div class="steps" style="margin-top: 14px">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Buat Environment</h4>
+              <p>
+                Klik ikon <strong>Environments</strong> di sidebar →
+                <strong>+</strong> → beri nama <em>"Server Dosen"</em>.
+              </p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-line"></div>
+            <div class="step-body">
+              <h4>Tambah variable BASE_URL</h4>
+              <div class="pm-window">
+                <div class="pm-titlebar">
+                  <div class="pm-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <span class="pm-title">Environment: Server Dosen</span>
+                </div>
+                <div class="pm-body-area">
+                  <div
+                    class="pm-json"
+                    style="
+                      display: grid;
+                      grid-template-columns: 1fr 1fr;
+                      gap: 8px;
+                      font-size: 12px;
+                    "
+                  >
+                    <span style="color: rgba(255, 255, 255, 0.4)">VARIABLE</span
+                    ><span style="color: rgba(255, 255, 255, 0.4)"
+                      >INITIAL VALUE</span
+                    >
+                    <span class="hl">BASE_URL</span
+                    ><span class="s">http://192.168.1.10:3000</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num done">✓</div>
+            <div class="step-body">
+              <h4>Gunakan di URL setiap request</h4>
+              <div class="pm-window">
+                <div class="pm-titlebar">
+                  <div class="pm-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+                <div class="pm-toolbar">
+                  <div class="pm-method GET">GET</div>
+                  <div class="pm-url">
+                    <span style="color: #68d391">{{BASE_URL}}</span
+                    ><span class="url-path">/api/mahasiswa</span>
+                  </div>
+                  <button class="pm-send">Send</button>
+                </div>
+              </div>
+              <p style="margin-top: 8px">
+                Kalau IP dosen berubah, cukup update di satu tempat — semua
+                request ikut berubah.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <h3>Tabel error yang sering muncul di Postman</h3>
+        <table class="err-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Artinya</th>
+              <th>Yang harus dicek</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-teal">200 OK</span></td>
+              <td>Request berhasil, data ditemukan</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-teal">201 Created</span></td>
+              <td>Data baru berhasil dibuat</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-gold">400 Bad Request</span></td>
+              <td>Data yang dikirim tidak lengkap atau formatnya salah</td>
+              <td>
+                Pastikan semua field wajib terisi dan JSON valid (tidak ada koma
+                berlebih)
+              </td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-gold">404 Not Found</span></td>
+              <td>NPM tidak ditemukan atau URL salah</td>
+              <td>
+                Cek penulisan URL — pastikan ada
+                <code style="font-family: var(--mono); font-size: 12px"
+                  >/api/mahasiswa/</code
+                >
+                sebelum NPM
+              </td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-gold">409 Conflict</span></td>
+              <td>NPM sudah terdaftar atau sudah di antrian hapus</td>
+              <td>Gunakan NPM yang belum pernah didaftarkan</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-gold">422 Unprocessable</span></td>
+              <td>
+                Format nilai field salah (terlalu pendek, terlalu panjang)
+              </td>
+              <td>NPM maks 10 karakter, Nama min 2 karakter</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="badge badge-red">Could not get response</span>
+              </td>
+              <td>Server tidak bisa dihubungi</td>
+              <td>
+                Cek IP, Port, dan koneksi WiFi — pastikan satu jaringan dengan
+                dosen
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout c-ok" style="margin-top: 20px">
+          <div class="callout-title">✓ Checklist sebelum selesai praktik</div>
+          <ul class="checklist">
+            <li>GET semua data — muncul list mahasiswa dari server</li>
+            <li>POST data diri — response 201, dataku muncul di GET all</li>
+            <li>GET by NPM — response 200 dengan data spesifik milikku</li>
+            <li>
+              PUT update — ubah pesan, response 200, perubahan terlihat di GET
+            </li>
+            <li>
+              DELETE request — response pending, dosen konfirmasi menerima
+              request
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <p>
+        Panduan Postman Web — Praktikum API &nbsp;·&nbsp;
+        <strong>Institut Mahardika</strong>
+      </p>
+    </footer>
+
+    <script>
+      window.addEventListener("scroll", () => {
+        document.getElementById("progress").style.width =
+          (window.scrollY / (document.body.scrollHeight - window.innerHeight)) *
+            100 +
+          "%";
+      });
+      document.querySelectorAll("section[id]").forEach((s) =>
+        new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                document
+                  .querySelectorAll(".nav-links a")
+                  .forEach((a) => a.classList.remove("active"));
+                const a = document.querySelector(
+                  `.nav-links a[href="#${e.target.id}"]`,
+                );
+                if (a) a.classList.add("active");
+              }
+            });
+          },
+          { rootMargin: "-40% 0px -55% 0px" },
+        ).observe(s),
+      );
+    </script>
+  </body>
 </html>

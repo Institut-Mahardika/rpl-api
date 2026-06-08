@@ -1,183 +1,438 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Praktikum API — Institut Mahardika</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --navy: #1B2B3A; --navy-s: #243447;
-    --gold: #D4841A; --gold-bg: #FFF8EE;
-    --teal: #1A7B6E; --teal-bg: #EAF5F3;
-    --blue: #1E5FA8; --blue-bg: #EEF4FC;
-    --red:  #C0392B; --red-bg:  #FEF0EE;
-    --bg: #F5F3EE; --card: #FFFFFF; --border: #E2DDD6;
-    --text: #1B2B3A; --muted: #7A8694;
-    --mono: 'Fira Code', monospace; --sans: 'Plus Jakarta Sans', sans-serif;
-  }
-  body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Praktikum API — Institut Mahardika</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --navy: #1b2b3a;
+        --navy-s: #243447;
+        --gold: #d4841a;
+        --gold-bg: #fff8ee;
+        --teal: #1a7b6e;
+        --teal-bg: #eaf5f3;
+        --blue: #1e5fa8;
+        --blue-bg: #eef4fc;
+        --red: #c0392b;
+        --red-bg: #fef0ee;
+        --bg: #f5f3ee;
+        --card: #ffffff;
+        --border: #e2ddd6;
+        --text: #1b2b3a;
+        --muted: #7a8694;
+        --mono: "Fira Code", monospace;
+        --sans: "Plus Jakarta Sans", sans-serif;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+        min-height: 100vh;
+      }
 
-  /* HERO */
-  .hero { background: var(--navy); padding: 80px 2rem 60px; text-align: center; }
-  .badge { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(245,166,35,0.3); border-radius: 100px; padding: 5px 16px; font-size: 12px; font-family: var(--mono); color: var(--gold); background: rgba(245,166,35,0.07); margin-bottom: 22px; }
-  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: p 2s ease-in-out infinite; }
-  @keyframes p { 0%,100%{opacity:1}50%{opacity:.3} }
-  h1 { font-size: clamp(1.8rem,5vw,3rem); font-weight: 800; color: white; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 14px; }
-  h1 span { color: #F5A623; }
-  .hero-sub { color: rgba(255,255,255,0.5); font-size: 1rem; max-width: 480px; margin: 0 auto 40px; line-height: 1.7; }
-  .hero-meta { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-  .meta-pill { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; padding: 6px 14px; font-size: 12px; color: rgba(255,255,255,0.6); }
-  .meta-pill b { color: rgba(255,255,255,0.9); }
+      /* HERO */
+      .hero {
+        background: var(--navy);
+        padding: 80px 2rem 60px;
+        text-align: center;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid rgba(245, 166, 35, 0.3);
+        border-radius: 100px;
+        padding: 5px 16px;
+        font-size: 12px;
+        font-family: var(--mono);
+        color: var(--gold);
+        background: rgba(245, 166, 35, 0.07);
+        margin-bottom: 22px;
+      }
+      .badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--gold);
+        animation: p 2s ease-in-out infinite;
+      }
+      @keyframes p {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+      h1 {
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        font-weight: 800;
+        color: white;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        margin-bottom: 14px;
+      }
+      h1 span {
+        color: #f5a623;
+      }
+      .hero-sub {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 1rem;
+        max-width: 480px;
+        margin: 0 auto 40px;
+        line-height: 1.7;
+      }
+      .hero-meta {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .meta-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 100px;
+        padding: 6px 14px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+      }
+      .meta-pill b {
+        color: rgba(255, 255, 255, 0.9);
+      }
 
-  /* CARDS */
-  .section { max-width: 860px; margin: 0 auto; padding: 56px 2rem; }
-  .sec-label { font-family: var(--mono); font-size: 11px; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-  .sec-label::after { content: ''; flex: 1; height: 1px; background: rgba(212,132,26,0.2); max-width: 60px; }
+      /* CARDS */
+      .section {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 56px 2rem;
+      }
+      .sec-label {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--gold);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sec-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: rgba(212, 132, 26, 0.2);
+        max-width: 60px;
+      }
 
-  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; text-decoration: none; color: var(--text); transition: all 0.2s; display: flex; flex-direction: column; gap: 12px; }
-  .card:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(27,43,58,0.1); }
-  .card-icon { font-size: 26px; }
-  .card-tag { font-family: var(--mono); font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 5px; display: inline-block; }
-  .tag-client  { background: var(--teal-bg); color: var(--teal); }
-  .tag-postman { background: #FFF3EC; color: #EF6C22; }
-  .tag-template{ background: var(--blue-bg); color: var(--blue); }
-  .card h3 { font-size: 16px; font-weight: 700; }
-  .card p  { font-size: 13px; color: var(--muted); line-height: 1.6; flex: 1; }
-  .card-arrow { font-size: 18px; color: var(--gold); align-self: flex-end; transition: transform 0.2s; }
-  .card:hover .card-arrow { transform: translateX(4px); }
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 14px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 24px;
+        text-decoration: none;
+        color: var(--text);
+        transition: all 0.2s;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .card:hover {
+        border-color: var(--gold);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(27, 43, 58, 0.1);
+      }
+      .card-icon {
+        font-size: 26px;
+      }
+      .card-tag {
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 500;
+        padding: 3px 9px;
+        border-radius: 5px;
+        display: inline-block;
+      }
+      .tag-client {
+        background: var(--teal-bg);
+        color: var(--teal);
+      }
+      .tag-postman {
+        background: #fff3ec;
+        color: #ef6c22;
+      }
+      .tag-template {
+        background: var(--blue-bg);
+        color: var(--blue);
+      }
+      .card h3 {
+        font-size: 16px;
+        font-weight: 700;
+      }
+      .card p {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+        flex: 1;
+      }
+      .card-arrow {
+        font-size: 18px;
+        color: var(--gold);
+        align-self: flex-end;
+        transition: transform 0.2s;
+      }
+      .card:hover .card-arrow {
+        transform: translateX(4px);
+      }
 
-  /* SERVER INFO */
-  .server-box { background: var(--navy); border-radius: 14px; padding: 28px 32px; margin-top: 0; }
-  .server-box h2 { color: white; font-size: 1.2rem; font-weight: 700; margin-bottom: 16px; }
-  .cmd-block { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 14px 18px; font-family: var(--mono); font-size: 13px; line-height: 1.9; margin-bottom: 12px; }
-  .cmd-block:last-child { margin-bottom: 0; }
-  .cmd-comment { color: rgba(255,255,255,0.3); }
-  .cmd-prompt  { color: rgba(255,255,255,0.4); }
-  .cmd-text    { color: #98C379; }
-  .cmd-flag    { color: #61AFEF; }
-  .cmd-val     { color: #F5A623; }
+      /* SERVER INFO */
+      .server-box {
+        background: var(--navy);
+        border-radius: 14px;
+        padding: 28px 32px;
+        margin-top: 0;
+      }
+      .server-box h2 {
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+      .cmd-block {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        padding: 14px 18px;
+        font-family: var(--mono);
+        font-size: 13px;
+        line-height: 1.9;
+        margin-bottom: 12px;
+      }
+      .cmd-block:last-child {
+        margin-bottom: 0;
+      }
+      .cmd-comment {
+        color: rgba(255, 255, 255, 0.3);
+      }
+      .cmd-prompt {
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .cmd-text {
+        color: #98c379;
+      }
+      .cmd-flag {
+        color: #61afef;
+      }
+      .cmd-val {
+        color: #f5a623;
+      }
 
-  .info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
-  .info-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 16px; }
-  .info-item .lbl { font-size: 10px; font-family: var(--mono); color: rgba(255,255,255,0.35); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
-  .info-item .val { font-family: var(--mono); font-size: 13px; color: #F5A623; }
+      .info-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 16px;
+      }
+      .info-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 12px 16px;
+      }
+      .info-item .lbl {
+        font-size: 10px;
+        font-family: var(--mono);
+        color: rgba(255, 255, 255, 0.35);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .info-item .val {
+        font-family: var(--mono);
+        font-size: 13px;
+        color: #f5a623;
+      }
 
-  /* DIVIDER */
-  .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+      /* DIVIDER */
+      .divider {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 0;
+      }
 
-  footer { text-align: center; padding: 28px 2rem; }
-  footer p { font-size: 13px; color: var(--muted); }
-  footer a { color: var(--gold); text-decoration: none; }
-  footer a:hover { text-decoration: underline; }
+      footer {
+        text-align: center;
+        padding: 28px 2rem;
+      }
+      footer p {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      footer a {
+        color: var(--gold);
+        text-decoration: none;
+      }
+      footer a:hover {
+        text-decoration: underline;
+      }
 
-  @media (max-width: 600px) {
-    .hero { padding: 60px 1.5rem 48px; }
-    .section { padding: 40px 1.5rem; }
-    .info-row { grid-template-columns: 1fr; }
-    .server-box { padding: 20px; }
-  }
-</style>
-</head>
-<body>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="badge"><span class="badge-dot"></span>Sesi 2 — Praktik Langsung</div>
-  <h1>Praktikum <span>API</span><br>Institut Mahardika</h1>
-  <p class="hero-sub">Materi dan template untuk sesi praktik pengenalan REST API — FastAPI server + client HTML.</p>
-  <div class="hero-meta">
-    <div class="meta-pill">Mata Kuliah: <b>RPL</b></div>
-    <div class="meta-pill">Stack: <b>FastAPI + HTML/JS</b></div>
-    <div class="meta-pill">Tools: <b>Postman Web</b></div>
-  </div>
-</div>
-
-<!-- CLIENT FILES -->
-<div class="section">
-  <div class="sec-label">Untuk mahasiswa</div>
-  <div class="card-grid">
-
-    <a class="card" href="client-mahasiswa-template.html">
-      <div class="card-icon">📝</div>
-      <span class="card-tag tag-template">Template</span>
-      <h3>File Tugas Client</h3>
-      <p>Template HTML yang harus dilengkapi. Buka file ini, isi 5 fungsi yang ditandai, dan pastikan semua fitur CRUD berjalan.</p>
-      <span class="card-arrow">→</span>
-    </a>
-
-    <a class="card" href="panduan-client.html">
-      <div class="card-icon">📖</div>
-      <span class="card-tag tag-client">Panduan</span>
-      <h3>Panduan Mengerjakan Template</h3>
-      <p>Panduan langkah demi langkah cara melengkapi setiap fungsi — dari GET all, POST, GET one, PUT, sampai DELETE.</p>
-      <span class="card-arrow">→</span>
-    </a>
-
-    <a class="card" href="panduan-postman.html">
-      <div class="card-icon">🟠</div>
-      <span class="card-tag tag-postman">Postman</span>
-      <h3>Panduan Postman Web</h3>
-      <p>Cara testing setiap endpoint menggunakan Postman Web — setup, collection, environment variable, dan troubleshoot.</p>
-      <span class="card-arrow">→</span>
-    </a>
-
-  </div>
-</div>
-
-<hr class="divider">
-
-<!-- SERVER INFO -->
-<div class="section">
-  <div class="sec-label">Untuk dosen — menjalankan server</div>
-  <div class="server-box">
-    <h2>⚙️ Cara Menjalankan Server Lokal</h2>
-
-    <div class="cmd-block">
-      <span class="cmd-comment"># 1. Clone repository</span><br>
-      <span class="cmd-prompt">$ </span><span class="cmd-text">git clone</span> https://github.com/institut-mahardika/rpl-api.git<br>
-      <span class="cmd-prompt">$ </span><span class="cmd-text">cd</span> rpl-api/server
+      @media (max-width: 600px) {
+        .hero {
+          padding: 60px 1.5rem 48px;
+        }
+        .section {
+          padding: 40px 1.5rem;
+        }
+        .info-row {
+          grid-template-columns: 1fr;
+        }
+        .server-box {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HERO -->
+    <div class="hero">
+      <div class="badge">
+        <span class="badge-dot"></span>Sesi 2 — Praktik Langsung
+      </div>
+      <h1>Praktikum <span>API</span><br />Institut Mahardika</h1>
+      <p class="hero-sub">
+        Materi dan template untuk sesi praktik pengenalan REST API — FastAPI
+        server + client HTML.
+      </p>
+      <div class="hero-meta">
+        <div class="meta-pill">Mata Kuliah: <b>RPL</b></div>
+        <div class="meta-pill">Stack: <b>FastAPI + HTML/JS</b></div>
+        <div class="meta-pill">Tools: <b>Postman Web</b></div>
+      </div>
     </div>
 
-    <div class="cmd-block">
-      <span class="cmd-comment"># 2. Install dependencies (sekali saja)</span><br>
-      <span class="cmd-prompt">$ </span><span class="cmd-text">pip install</span> <span class="cmd-flag">-r</span> requirements.txt
+    <!-- CLIENT FILES -->
+    <div class="section">
+      <div class="sec-label">Untuk mahasiswa</div>
+      <div class="card-grid">
+        <a class="card" href="client-mahasiswa-template.html">
+          <div class="card-icon">📝</div>
+          <span class="card-tag tag-template">Template</span>
+          <h3>File Tugas Client</h3>
+          <p>
+            Template HTML yang harus dilengkapi. Buka file ini, isi 5 fungsi
+            yang ditandai, dan pastikan semua fitur CRUD berjalan.
+          </p>
+          <span class="card-arrow">→</span>
+        </a>
+
+        <a class="card" href="panduan-client.html">
+          <div class="card-icon">📖</div>
+          <span class="card-tag tag-client">Panduan</span>
+          <h3>Panduan Mengerjakan Template</h3>
+          <p>
+            Panduan langkah demi langkah cara melengkapi setiap fungsi — dari
+            GET all, POST, GET one, PUT, sampai DELETE.
+          </p>
+          <span class="card-arrow">→</span>
+        </a>
+
+        <a class="card" href="panduan-postman.html">
+          <div class="card-icon">🟠</div>
+          <span class="card-tag tag-postman">Postman</span>
+          <h3>Panduan Postman Web</h3>
+          <p>
+            Cara testing setiap endpoint menggunakan Postman Web — setup,
+            collection, environment variable, dan troubleshoot.
+          </p>
+          <span class="card-arrow">→</span>
+        </a>
+      </div>
     </div>
 
-    <div class="cmd-block">
-      <span class="cmd-comment"># 3. Jalankan server</span><br>
-      <span class="cmd-prompt">$ </span><span class="cmd-text">uvicorn</span> main:app <span class="cmd-flag">--host</span> <span class="cmd-val">0.0.0.0</span> <span class="cmd-flag">--port</span> <span class="cmd-val">3000</span> <span class="cmd-flag">--reload</span>
+    <hr class="divider" />
+
+    <!-- SERVER INFO -->
+    <div class="section">
+      <div class="sec-label">Untuk dosen — menjalankan server</div>
+      <div class="server-box">
+        <h2>⚙️ Cara Menjalankan Server Lokal</h2>
+
+        <div class="cmd-block">
+          <span class="cmd-comment"># 1. Clone repository</span><br />
+          <span class="cmd-prompt">$ </span
+          ><span class="cmd-text">git clone</span>
+          https://github.com/institut-mahardika/rpl-api.git<br />
+          <span class="cmd-prompt">$ </span
+          ><span class="cmd-text">cd</span> rpl-api/server
+        </div>
+
+        <div class="cmd-block">
+          <span class="cmd-comment"
+            ># 2. Install dependencies (sekali saja)</span
+          ><br />
+          <span class="cmd-prompt">$ </span
+          ><span class="cmd-text">pip install</span>
+          <span class="cmd-flag">-r</span> requirements.txt
+        </div>
+
+        <div class="cmd-block">
+          <span class="cmd-comment"># 3. Jalankan server</span><br />
+          <span class="cmd-prompt">$ </span
+          ><span class="cmd-text">uvicorn</span> main:app
+          <span class="cmd-flag">--host</span>
+          <span class="cmd-val">0.0.0.0</span>
+          <span class="cmd-flag">--port</span> <span class="cmd-val">3000</span>
+          <span class="cmd-flag">--reload</span>
+        </div>
+
+        <div class="info-row">
+          <div class="info-item">
+            <div class="lbl">Dokumentasi API</div>
+            <div class="val">http://&lt;IP&gt;:3000/docs</div>
+          </div>
+          <div class="info-item">
+            <div class="lbl">Admin Panel</div>
+            <div class="val">http://&lt;IP&gt;:3000/admin/ui</div>
+          </div>
+          <div class="info-item">
+            <div class="lbl">Cek IP laptop (macOS/Linux)</div>
+            <div class="val">ifconfig | grep inet</div>
+          </div>
+          <div class="info-item">
+            <div class="lbl">Cek IP laptop (Windows)</div>
+            <div class="val">ipconfig</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="info-row">
-      <div class="info-item">
-        <div class="lbl">Dokumentasi API</div>
-        <div class="val">http://&lt;IP&gt;:3000/docs</div>
-      </div>
-      <div class="info-item">
-        <div class="lbl">Admin Panel</div>
-        <div class="val">http://&lt;IP&gt;:3000/admin/ui</div>
-      </div>
-      <div class="info-item">
-        <div class="lbl">Cek IP laptop (macOS/Linux)</div>
-        <div class="val">ifconfig | grep inet</div>
-      </div>
-      <div class="info-item">
-        <div class="lbl">Cek IP laptop (Windows)</div>
-        <div class="val">ipconfig</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <p>
-    <a href="https://github.com/institut-mahardika/rpl-api" target="_blank">github.com/institut-mahardika/rpl-api</a>
-    &nbsp;·&nbsp; Institut Mahardika
-  </p>
-</footer>
-
-</body>
+    <footer>
+      <p>
+        <a href="https://github.com/institut-mahardika/rpl-api" target="_blank"
+          >github.com/institut-mahardika/rpl-api</a
+        >
+        &nbsp;·&nbsp; Institut Mahardika
+      </p>
+    </footer>
+  </body>
 </html>
