@@ -592,7 +592,7 @@
         try {
           const [statusRes, mahasiswaRes, pendingRes] = await Promise.all([
             api("GET", "/api/status"),
-            api("GET", "/api/mahasiswa/"),
+            api("GET", "/api/mahasiswa"),
             api("GET", "/admin/pending"),
           ]);
 

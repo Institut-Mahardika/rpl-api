@@ -1141,6 +1141,7 @@
           // TODO: render tiap item dari json.data ke dalam tabel
           // Petunjuk: gunakan json.data.forEach(m => { ... })
           // Tiap item punya: m.npm, m.nama, m.prodi, m.kelas, m.pesan, m.status
+
         } catch (err) {
           notif("Error: " + err.message, "err");
         } finally {
@@ -1238,10 +1239,10 @@
           }
 
           const BASE_URL = getBaseUrl();
-          const url = BASE_URL + "/api/..." + npm; // ← GANTI INI
+          const url = BASE_URL + "/api/.../" + npm; // ← GANTI INI
 
           const res = await fetch(url, {
-            method: "...", // ← GANTI INI
+            method: "PUT", // ← GANTI INI
             headers: { "Content-Type": "..." }, // ← GANTI INI
             body: JSON.stringify(body),
           });
